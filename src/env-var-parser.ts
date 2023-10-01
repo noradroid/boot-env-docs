@@ -1,3 +1,4 @@
+import { EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
 import { Property } from "./property.type";
 
@@ -92,8 +93,23 @@ const getEnvVars = (value: string): EnvVar[] => {
   return envVars;
 };
 
-const main = (property: Property): EnvVar[] => {
-  return getEnvVars(property.value);
-};
+export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
+  const variables: EnvVarDict = {};
 
-export default main;
+  properties.forEach((prop) => {
+    const envVars = getEnvVars(prop.value);
+    envVars.forEach((envVar) => {
+      if (!(envVar.envVar in variables)) {
+        variables[envVar.envVar] = { envVar: envVar.envVar, instances: [] };
+      }
+      variables[envVar.envVar].instances.push({
+        key: prop.key,
+        default: envVar.default,
+      });
+    });
+  });
+
+  console.log(JSON.stringify(variables, undefined, 2));
+
+  return variables;
+};
