@@ -1,4 +1,4 @@
-import { EnvVarDict } from "./env-var-info.type";
+import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
 import { Property } from "./property.type";
 
@@ -112,4 +112,8 @@ export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
   console.log(JSON.stringify(variables, undefined, 2));
 
   return variables;
+};
+
+export const convertEnvVarInfoDictToArr = (dict: EnvVarDict): EnvVarArr => {
+  return Object.values(dict);
 };
