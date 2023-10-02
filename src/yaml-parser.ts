@@ -1,10 +1,25 @@
-import YAML from "yaml";
+import { parse, parseAllDocuments } from "yaml";
 
 import { Property } from "./property.type";
 
 const getYamlObj = (file: string) => {
   try {
-    return YAML.parse(file, { strict: true });
+    // return parse(file, { strict: true });
+    const documents = parseAllDocuments(file, { strict: true });
+
+    let topLevelConfigArr: { key: string; value: any }[] = [];
+    let topLevelConfigDict: any = {};
+    documents.forEach((doc) => {
+      topLevelConfigArr.push(...(doc.contents as any).items);
+    });
+    topLevelConfigArr.forEach((item) => {
+      if (item.key in topLevelConfigDict) {
+        topLevelConfigDict[item.key] = item.value;
+      } else {
+        topLevelConfigDict[item.key] = item.value;
+      }
+    });
+    return topLevelConfigDict;
   } catch (error) {
     console.error(error);
     process.exit(1);
