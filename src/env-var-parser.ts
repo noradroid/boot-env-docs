@@ -1,6 +1,7 @@
 import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
 import { Property } from "./property.type";
+import { isString } from "./type-util";
 
 /**
  * Get environment variable index in property value.
@@ -97,16 +98,18 @@ export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
   const variables: EnvVarDict = {};
 
   properties.forEach((prop) => {
-    const envVars = getEnvVars(prop.value);
-    envVars.forEach((envVar) => {
-      if (!(envVar.envVar in variables)) {
-        variables[envVar.envVar] = { envVar: envVar.envVar, instances: [] };
-      }
-      variables[envVar.envVar].instances.push({
-        key: prop.key,
-        default: envVar.default,
+    if (isString(prop.value)) {
+      const envVars = getEnvVars(prop.value);
+      envVars.forEach((envVar) => {
+        if (!(envVar.envVar in variables)) {
+          variables[envVar.envVar] = { envVar: envVar.envVar, instances: [] };
+        }
+        variables[envVar.envVar].instances.push({
+          key: prop.key,
+          default: envVar.default,
+        });
       });
-    });
+    }
   });
 
   console.log(JSON.stringify(variables, undefined, 2));

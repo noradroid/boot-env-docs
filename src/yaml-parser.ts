@@ -1,25 +1,47 @@
-import { parse, parseAllDocuments } from "yaml";
+import { parse, parseAllDocuments, stringify } from "yaml";
 
 import { Property } from "./property.type";
 
+type KeyValue = { key: string; value: any };
+
+/**
+ * Parse single-document YAML files using YAML parse().
+ * @param file
+ * @return YAML parse() method return object
+ */
 const getYamlObj = (file: string) => {
   try {
-    // return parse(file, { strict: true });
+    return parse(file, { strict: true });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+/**
+ * Parse multi-document YAML files using YAML parseAllDocuments().
+ * @param file
+ * @returns Array of objects like getYamlObj's return type
+ */
+const getYamlObjsArr = (file: string) => {
+  try {
     const documents = parseAllDocuments(file, { strict: true });
 
-    let topLevelConfigArr: { key: string; value: any }[] = [];
-    let topLevelConfigDict: any = {};
+    const yamlObjsArr: any = [];
+
+    // Convert all top-level properties into json objects
     documents.forEach((doc) => {
-      topLevelConfigArr.push(...(doc.contents as any).items);
+      const keyValueObjs: any = (doc.contents as any).items;
+      yamlObjsArr.push(
+        ...keyValueObjs.map((keyValue: any) => {
+          const groupStr = stringify(keyValue);
+          const yamlObj = parse(groupStr, { strict: true });
+          return yamlObj;
+        })
+      );
     });
-    topLevelConfigArr.forEach((item) => {
-      if (item.key in topLevelConfigDict) {
-        topLevelConfigDict[item.key] = item.value;
-      } else {
-        topLevelConfigDict[item.key] = item.value;
-      }
-    });
-    return topLevelConfigDict;
+
+    return yamlObjsArr;
   } catch (error) {
     console.error(error);
     process.exit(1);
@@ -64,11 +86,14 @@ const recurseYaml = (
 };
 
 const main = (file: string): Property[] => {
-  const parsedYamlObj = getYamlObj(file);
+  // const parsedYamlObj = getYamlObj(file);
+  const parsedYamlObjs = getYamlObjsArr(file);
 
   const properties: Property[] = [];
 
-  recurseYaml(properties, "", parsedYamlObj);
+  parsedYamlObjs.forEach((obj: any) => {
+    recurseYaml(properties, "", obj);
+  });
 
   console.log(properties);
 
