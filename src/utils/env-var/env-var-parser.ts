@@ -1,6 +1,6 @@
 import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
-import { Property } from "../yaml/property.type";
+import { Property } from "../property/property.type";
 import {
   CURLY_OPENING_BRACE,
   ENV_VAR_CLOSING_BRACE,

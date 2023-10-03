@@ -1,4 +1,4 @@
 export enum Mode {
-  PARSE_YAML = "parseyaml",
+  PARSE_PROPERTY = "parseproperty",
   PARSE_JSON = "parsejson",
 }
