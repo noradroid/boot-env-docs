@@ -9,17 +9,34 @@ import {
 } from "./src/env-var-parser";
 import { generateMdFromJson } from "./src/md-generator";
 
-const fileName = getFileName();
+const OUTPUT_JSON = "output/records.json";
 
-const file = readFile(fileName);
+let variablesDict: any = {};
 
-const properties = parseYamlProperties(file);
+if (fs.existsSync(OUTPUT_JSON)) {
+  variablesDict = JSON.parse(readFile(OUTPUT_JSON));
+} else {
+  const fileName = getFileName();
+  const file = readFile(fileName);
 
-const variablesDict = getEnvVarInfoDict(properties);
+  const properties = parseYamlProperties(file);
+
+  variablesDict = getEnvVarInfoDict(properties);
+}
 
 const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 
 console.log(JSON.stringify(variablesArr, undefined, 2));
+
+try {
+  fs.writeFileSync(
+    "output/records.json",
+    JSON.stringify(variablesDict, undefined, 2)
+  );
+} catch (err) {
+  console.error(err);
+  process.exit(1);
+}
 
 const doc = generateMdFromJson(variablesArr);
 
