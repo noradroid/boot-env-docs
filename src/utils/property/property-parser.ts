@@ -4,9 +4,10 @@ import parseProperties from "./properties-parser";
 import parseYaml from "./yaml-parser";
 
 const main = (file: string, fileName: string): Property[] => {
-  const fileType: FileType = fileName.endsWith(FileType.YAML)
-    ? FileType.YAML
-    : FileType.PROPERTIES;
+  const fileType: FileType =
+    fileName.endsWith(FileType.YAML) || fileName.endsWith(FileType.YML)
+      ? FileType.YAML
+      : FileType.PROPERTIES;
   if (fileType === FileType.YAML) {
     return parseYaml(file);
   } else {
