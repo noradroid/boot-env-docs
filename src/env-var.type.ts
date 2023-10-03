@@ -1,1 +1,1 @@
-export type EnvVar = { envVar: string; default?: string };
+export type EnvVar = { envVar: string; default: string | null };

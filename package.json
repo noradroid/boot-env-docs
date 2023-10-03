@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon index.ts -f test.yaml",
+    "start": "nodemon index.ts -m parsejson -f output/records.json -o document.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "noradroid",

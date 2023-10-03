@@ -1,10 +1,48 @@
-import YAML from "yaml";
+import { parse, parseAllDocuments, stringify } from "yaml";
 
 import { Property } from "./property.type";
 
-const getYamlObj = (file: string) => {
+type KeyValue = { key: string; value: any };
+
+/**
+ * Parse single-document YAML files using YAML parse().
+ * @param file
+ * @return YAML parse() method return object
+ */
+const getYamlObj = (file: string): any | null => {
   try {
-    return YAML.parse(file, { strict: true });
+    return parse(file, { strict: true });
+  } catch (error) {
+    // YAMLParseError
+    console.error(error);
+    return null;
+  }
+};
+
+/**
+ * Parse multi-document YAML files using YAML parseAllDocuments().
+ * @param file
+ * @returns Array of objects like getYamlObj's return type
+ */
+const getYamlObjsArr = (file: string) => {
+  try {
+    const documents = parseAllDocuments(file, { strict: true });
+
+    const yamlObjsArr: any = [];
+
+    // Convert all top-level properties into json objects
+    documents.forEach((doc) => {
+      const keyValueObjs: any = (doc.contents as any).items;
+      yamlObjsArr.push(
+        ...keyValueObjs.map((keyValue: any) => {
+          const groupStr = stringify(keyValue);
+          const yamlObj = parse(groupStr, { strict: true });
+          return yamlObj;
+        })
+      );
+    });
+
+    return yamlObjsArr;
   } catch (error) {
     console.error(error);
     process.exit(1);
@@ -49,11 +87,19 @@ const recurseYaml = (
 };
 
 const main = (file: string): Property[] => {
-  const parsedYamlObj = getYamlObj(file);
-
   const properties: Property[] = [];
 
-  recurseYaml(properties, "", parsedYamlObj);
+  const parsedYamlObj = getYamlObj(file);
+
+  if (parsedYamlObj === null) {
+    const parsedYamlObjs: any[] = getYamlObjsArr(file);
+
+    parsedYamlObjs.forEach((obj: any) => {
+      recurseYaml(properties, "", obj);
+    });
+  } else {
+    recurseYaml(properties, "", parsedYamlObj);
+  }
 
   console.log(properties);
 

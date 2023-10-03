@@ -1,44 +1,50 @@
 import fs from "fs";
-import { Markdown, bold } from "@scdev/declarative-markdown";
 
-import getFileName from "./src/arg-parser";
+import getModeInputFileOutputJsonOutputMd from "./src/arg-parser";
 import readFile from "./src/file-util";
 import parseYamlProperties from "./src/yaml-parser";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
 } from "./src/env-var-parser";
+import { generateMdFromJson } from "./src/md-generator";
+import { Mode } from "./src/mode.enum";
 
-const fileName = getFileName();
+const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
+  getModeInputFileOutputJsonOutputMd();
 
-const file = readFile(fileName);
+let variablesDict: any = {};
 
-const properties = parseYamlProperties(file);
+if (mode === Mode.PARSE_JSON) {
+  variablesDict = JSON.parse(readFile(inputFileName));
+} else {
+  const file = readFile(inputFileName);
 
-const variablesDict = getEnvVarInfoDict(properties);
+  const properties = parseYamlProperties(file);
+
+  variablesDict = getEnvVarInfoDict(properties);
+}
 
 const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 
 console.log(JSON.stringify(variablesArr, undefined, 2));
 
-const md = new Markdown("Environment Variables Documentation");
+if (mode === Mode.PARSE_YAML) {
+  try {
+    fs.writeFileSync(
+      jsonOutputFileName,
+      JSON.stringify(variablesDict, undefined, 2)
+    );
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+}
 
-variablesArr.forEach((info) => {
-  md.header(info.envVar, 3).paragraph("Description");
-
-  md.paragraph(`${bold("Type:")} unknown`);
-
-  md.paragraph(`${bold("Used in:")}`);
-  md.table(
-    ["Property", "Default value"],
-    [info.instances.map((instance) => [instance.key, instance.default ?? "-"])]
-  );
-});
-
-const doc = md.render();
+const doc = generateMdFromJson(variablesArr);
 
 try {
-  fs.writeFileSync("output/doc.md", doc);
+  fs.writeFileSync(mdOutputFileName, doc);
 } catch (err) {
   console.error(err);
   process.exit(1);
