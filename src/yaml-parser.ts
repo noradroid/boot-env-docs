@@ -9,12 +9,13 @@ type KeyValue = { key: string; value: any };
  * @param file
  * @return YAML parse() method return object
  */
-const getYamlObj = (file: string) => {
+const getYamlObj = (file: string): any | null => {
   try {
     return parse(file, { strict: true });
   } catch (error) {
+    // YAMLParseError
     console.error(error);
-    process.exit(1);
+    return null;
   }
 };
 
@@ -86,14 +87,19 @@ const recurseYaml = (
 };
 
 const main = (file: string): Property[] => {
-  // const parsedYamlObj = getYamlObj(file);
-  const parsedYamlObjs = getYamlObjsArr(file);
-
   const properties: Property[] = [];
 
-  parsedYamlObjs.forEach((obj: any) => {
-    recurseYaml(properties, "", obj);
-  });
+  const parsedYamlObj = getYamlObj(file);
+
+  if (parsedYamlObj === null) {
+    const parsedYamlObjs: any[] = getYamlObjsArr(file);
+
+    parsedYamlObjs.forEach((obj: any) => {
+      recurseYaml(properties, "", obj);
+    });
+  } else {
+    recurseYaml(properties, "", parsedYamlObj);
+  }
 
   console.log(properties);
 
