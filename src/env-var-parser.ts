@@ -116,7 +116,7 @@ const getEnvVars = (value: string): EnvVar[] => {
     } else {
       envVars.push({
         envVar: envVarDefault,
-        default: undefined,
+        default: null,
       });
     }
   }
@@ -133,7 +133,7 @@ export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
         if (!(envVar.envVar in variables)) {
           variables[envVar.envVar] = {
             envVar: envVar.envVar,
-            type: undefined,
+            type: null,
             instances: [],
           };
         }
