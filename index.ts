@@ -1,5 +1,4 @@
 import fs from "fs";
-import { Markdown, bold } from "@scdev/declarative-markdown";
 
 import getFileName from "./src/arg-parser";
 import readFile from "./src/file-util";
@@ -8,6 +7,7 @@ import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
 } from "./src/env-var-parser";
+import { generateMdFromJson } from "./src/md-generator";
 
 const fileName = getFileName();
 
@@ -21,21 +21,7 @@ const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 
 console.log(JSON.stringify(variablesArr, undefined, 2));
 
-const md = new Markdown("Environment Variables Documentation");
-
-variablesArr.forEach((info) => {
-  md.header(info.envVar, 3).paragraph("Description");
-
-  md.paragraph(`${bold("Type:")} unknown`);
-
-  md.paragraph(`${bold("Used in:")}`);
-  md.table(
-    ["Property", "Default value"],
-    [info.instances.map((instance) => [instance.key, instance.default ?? "-"])]
-  );
-});
-
-const doc = md.render();
+const doc = generateMdFromJson(variablesArr);
 
 try {
   fs.writeFileSync("output/doc.md", doc);
