@@ -1,6 +1,14 @@
 import { Markdown, bold } from "@scdev/declarative-markdown";
 import { EnvVarArr } from "./env-var-info.type";
 
+const parseTextIntoCode = (text: string): string => {
+  return `
+\`\`\`
+${text}
+\`\`\`
+  `;
+};
+
 export const generateMdFromJson = (jsonArr: EnvVarArr): string => {
   const md = new Markdown("Environment Variables Documentation");
 
@@ -9,21 +17,20 @@ export const generateMdFromJson = (jsonArr: EnvVarArr): string => {
 
     md.paragraph(`${bold("Type:")} ${info.type ?? "unknown"}`);
 
-    if (info.envVar === "server.servlet.context-path") {
-      console.log(info);
-    }
+    md.paragraph(`${bold("Default value:")}`);
+
+    md.paragraph(
+      `${parseTextIntoCode(info.instances[0].default ?? "<empty>")}`
+    );
 
     md.paragraph(`${bold("Used in:")}`);
     md.table(
-      ["Property", "Default value"],
-      [
-        ...info.instances.map((instance) => [
-          instance.key,
-          instance.default ?? "-",
-        ]),
-      ]
+      ["Property"],
+      [...info.instances.map((instance) => [instance.key])]
     );
   });
+
+  md.tableOfContent();
 
   return md.render();
 };
