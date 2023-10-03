@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "nodemon src/index.ts -m parseproperty -f application-prod.properties -j appl-prod.json -o appl-prod.md",
+    "start": "nodemon src/index.ts -m parseproperty -f test.yaml -j records.json -o document.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "noradroid",
