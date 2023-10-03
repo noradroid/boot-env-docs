@@ -56,9 +56,11 @@ const getOutputFileArg = (
 
 const getMode = (args: string[]): Mode => {
   if (args[0] === MODE_FLAG) {
-    return args[1] === Mode.PARSE_YAML ? Mode.PARSE_YAML : Mode.PARSE_JSON;
+    return args[1] === Mode.PARSE_PROPERTY
+      ? Mode.PARSE_PROPERTY
+      : Mode.PARSE_JSON;
   } else {
-    return Mode.PARSE_YAML;
+    return Mode.PARSE_PROPERTY;
   }
 };
 

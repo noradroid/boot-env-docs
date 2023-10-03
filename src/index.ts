@@ -2,7 +2,7 @@ import fs from "fs";
 
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
 import readFile from "./utils/file/file-util";
-import parseYamlProperties from "./utils/yaml/yaml-parser";
+import parseProperty from "./utils/property/property-parser";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
@@ -20,7 +20,7 @@ if (mode === Mode.PARSE_JSON) {
 } else {
   const file = readFile(inputFileName);
 
-  const properties = parseYamlProperties(file);
+  const properties = parseProperty(file, inputFileName);
 
   variablesDict = getEnvVarInfoDict(properties);
 }
@@ -29,7 +29,7 @@ const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 
 console.log(JSON.stringify(variablesArr, undefined, 2));
 
-if (mode === Mode.PARSE_YAML) {
+if (mode === Mode.PARSE_PROPERTY) {
   try {
     fs.writeFileSync(
       jsonOutputFileName,
