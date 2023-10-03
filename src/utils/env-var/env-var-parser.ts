@@ -1,12 +1,12 @@
 import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
-import { Property } from "./property.type";
+import { Property } from "../yaml/property.type";
 import {
   CURLY_OPENING_BRACE,
   ENV_VAR_CLOSING_BRACE,
   ENV_VAR_OPENING_BRACE,
 } from "./tokens";
-import { isString } from "./type-util";
+import { isString } from "../misc/type-util";
 
 const isOutOfBounds = (index: number, length: number): boolean => {
   return index >= length || index === -1;

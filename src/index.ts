@@ -1,14 +1,14 @@
 import fs from "fs";
 
-import getModeInputFileOutputJsonOutputMd from "./src/arg-parser";
-import readFile from "./src/file-util";
-import parseYamlProperties from "./src/yaml-parser";
+import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
+import readFile from "./utils/file/file-util";
+import parseYamlProperties from "./utils/yaml/yaml-parser";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
-} from "./src/env-var-parser";
-import { generateMdFromJson } from "./src/md-generator";
-import { Mode } from "./src/mode.enum";
+} from "./utils/env-var/env-var-parser";
+import { generateMdFromJson } from "./utils/md/md-generator";
+import { Mode } from "./utils/arg/mode.enum";
 
 const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
   getModeInputFileOutputJsonOutputMd();

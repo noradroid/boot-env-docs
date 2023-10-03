@@ -2,9 +2,9 @@
   "name": "spring-properties-env-doc",
   "version": "0.0.1",
   "description": "",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "nodemon index.ts -m parsejson -f output/records.json -o document.md",
+    "start": "nodemon src/index.ts -m parsejson -f output/records.json -o document.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "noradroid",
