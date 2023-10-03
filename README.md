@@ -4,11 +4,12 @@ Identify environment variables in a Spring Boot application.yaml properties file
 
 ### Run
 
-Replace the script for "start" in `package.json`.
+Replace the script for "node" in `package.json` with one of the following. Then run `npm run build-run`.
+
 #### Get environment variables from yaml file
 
 ```
-nodemon index.ts -m parseproperty -f application.yaml -j output.json -m output.md
+node dist/index.js -m parseproperty -f application.yaml -j output.json -m output.md
 ```
 
 - read from application.yaml file
@@ -18,7 +19,7 @@ nodemon index.ts -m parseproperty -f application.yaml -j output.json -m output.m
 #### Get environment variables from properties file
 
 ```
-nodemon index.ts -m parseproperty -f application.properties -j output.json -m output.md
+node dist/index.js -m parseproperty -f application.properties -j output.json -m output.md
 ```
 
 - same as yaml version
@@ -26,7 +27,7 @@ nodemon index.ts -m parseproperty -f application.properties -j output.json -m ou
 #### Produce markdown file from edited output.json
 
 ```
-nodemon index.ts -m parsejson -f output.json -m output.md
+node dist/index.js -m parsejson -f output.json -m output.md
 ```
 
 - produce markdown file output.md based on output.json
