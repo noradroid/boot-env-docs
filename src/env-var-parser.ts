@@ -1,7 +1,16 @@
 import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
 import { Property } from "./property.type";
+import {
+  CURLY_OPENING_BRACE,
+  ENV_VAR_CLOSING_BRACE,
+  ENV_VAR_OPENING_BRACE,
+} from "./tokens";
 import { isString } from "./type-util";
+
+const isOutOfBounds = (index: number, length: number): boolean => {
+  return index >= length || index === -1;
+};
 
 /**
  * Get environment variable index in property value.
@@ -10,7 +19,7 @@ import { isString } from "./type-util";
  * @return {number} Environment variable index, or -1 if not found
  */
 const getEnvVarIndex = (value: string, startingIndex?: number): number => {
-  const openingBraceIndex = value.indexOf("${", startingIndex);
+  const openingBraceIndex = value.indexOf(ENV_VAR_OPENING_BRACE, startingIndex);
   if (openingBraceIndex === -1) {
     return -1;
   }
@@ -33,7 +42,23 @@ const getEnvVarClosingBraceIndex = (
   value: string,
   envVarIndex: number
 ): number => {
-  return value.indexOf("}", envVarIndex + 1);
+  let startingCheckIndex = envVarIndex;
+  let closingBraceIndex = value.indexOf(
+    ENV_VAR_CLOSING_BRACE,
+    startingCheckIndex
+  );
+  while (
+    value
+      .substring(startingCheckIndex, closingBraceIndex)
+      .includes(CURLY_OPENING_BRACE)
+  ) {
+    startingCheckIndex = closingBraceIndex + 1;
+    closingBraceIndex = value.indexOf(
+      ENV_VAR_CLOSING_BRACE,
+      startingCheckIndex
+    );
+  }
+  return closingBraceIndex;
 };
 
 /**
@@ -65,7 +90,7 @@ const getEnvVars = (value: string): EnvVar[] => {
   const envVars: EnvVar[] = [];
   let startingIndex = 0;
   while (true) {
-    if (startingIndex >= value.length || startingIndex === -1) {
+    if (isOutOfBounds(startingIndex, value.length)) {
       break;
     }
     const envVarIndex = getEnvVarIndex(value, startingIndex);
@@ -79,11 +104,14 @@ const getEnvVars = (value: string): EnvVar[] => {
       envVarIndex,
       closingBraceIndex
     );
-    const colonSeparator = envVarDefault.indexOf(":");
-    if (colonSeparator !== -1) {
+    const colonSeparatorIndex = envVarDefault.indexOf(":");
+    if (
+      colonSeparatorIndex !== -1 &&
+      colonSeparatorIndex !== closingBraceIndex - 1
+    ) {
       envVars.push({
-        envVar: envVarDefault.substring(0, colonSeparator),
-        default: envVarDefault.substring(colonSeparator + 1),
+        envVar: envVarDefault.substring(0, colonSeparatorIndex),
+        default: envVarDefault.substring(colonSeparatorIndex + 1),
       });
     } else {
       envVars.push({
