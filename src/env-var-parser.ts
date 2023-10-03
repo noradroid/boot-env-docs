@@ -133,7 +133,8 @@ export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
         if (!(envVar.envVar in variables)) {
           variables[envVar.envVar] = {
             envVar: envVar.envVar,
-            type: null,
+            description: "",
+            type: "",
             instances: [],
           };
         }

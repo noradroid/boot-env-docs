@@ -4,7 +4,8 @@ export type EnvVarDict = { [envVar: string]: EnvVarInfo };
 
 export type EnvVarInfo = {
   envVar: string;
-  type: string | null;
+  description: string;
+  type: string;
   instances: EnvVarInstance[];
 };
 

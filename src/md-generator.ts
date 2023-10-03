@@ -5,7 +5,7 @@ export const generateMdFromJson = (jsonArr: EnvVarArr): string => {
   const md = new Markdown("Environment Variables Documentation");
 
   jsonArr.forEach((info) => {
-    md.header(info.envVar, 3).paragraph("Description");
+    md.header(info.envVar, 3).paragraph(info.description);
 
     md.paragraph(`${bold("Type:")} ${info.type ?? "unknown"}`);
 
