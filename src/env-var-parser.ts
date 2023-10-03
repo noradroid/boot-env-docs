@@ -107,7 +107,7 @@ const getEnvVars = (value: string): EnvVar[] => {
     const colonSeparatorIndex = envVarDefault.indexOf(":");
     if (
       colonSeparatorIndex !== -1 &&
-      colonSeparatorIndex !== closingBraceIndex - 1
+      colonSeparatorIndex !== envVarDefault.length - 1
     ) {
       envVars.push({
         envVar: envVarDefault.substring(0, colonSeparatorIndex),
