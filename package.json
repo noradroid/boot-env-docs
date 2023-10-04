@@ -1,7 +1,7 @@
 {
-  "name": "spring-properties-env-doc",
+  "name": "boot-env-docs",
   "version": "0.0.1",
-  "description": "",
+  "description": "This package aims to help you generate documentation for Spring Boot environment variables.",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
@@ -10,6 +10,11 @@
     "nodemon": "nodemon src/index.ts -m parseproperty -f test.yaml -j records.json -o document.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "boot-env-docs": "./dist/index.js"
+  },
+  "repository": "https://github.com/noradroid/spring-boot-env-var-docs",
+  "homepage": "https://github.com/noradroid/spring-boot-env-var-docs#readme",
   "author": "noradroid",
   "license": "MIT",
   "dependencies": {
