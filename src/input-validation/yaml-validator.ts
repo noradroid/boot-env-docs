@@ -1,42 +1,30 @@
-import { Document, parse, parseAllDocuments, YAMLParseError } from "yaml";
+import { Document, parseAllDocuments, YAMLParseError } from "yaml";
 
 const formatYAMLParseError = (err: YAMLParseError): string => {
   return `${err.name} - caused by ${err.code}`;
 };
 
-const parseSingleDocument = (content: string): boolean => {
-  try {
-    parse(content);
+const isDocumentValid = (document: Document): boolean => {
+  if (document.errors.length > 0) {
+    throw document.errors[0];
+  } else {
     return true;
-  } catch (err) {
-    // YAMLParseError
-    if (err instanceof YAMLParseError) {
-      console.error(formatYAMLParseError(err)); // YAMLParseError - caused by MULTIPLE_DOCS
-    } else {
-      console.error(err);
-    }
-    return false;
   }
 };
 
-const multiDocumentContainsError = (documents: Document[]): boolean => {
-  return documents.some((document) => {
-    if (document.errors.length > 0) {
-      // YAMLParseError
-      console.log(formatYAMLParseError(document.errors[0]));
-      // YAMLParseError - caused by BLOCK_AS_IMPLICIT_KEY
-      // = Nested mappings are not allowed in compact mappings
-    }
-  });
-};
-
-const parseMultiDocument = (content: string): boolean => {
+const parseYaml = (content: string): boolean => {
   try {
     const result: Document[] = parseAllDocuments(content);
-    return !multiDocumentContainsError(result);
+    return result.every(isDocumentValid);
   } catch (err) {
     // YAMLParseError
-    console.error(err);
+    if (err instanceof YAMLParseError) {
+      console.error(formatYAMLParseError(err));
+      // YAMLParseError - caused by BLOCK_AS_IMPLICIT_KEY
+      // = Nested mappings are not allowed in compact mappings
+    } else {
+      console.error(err);
+    }
     return false;
   }
 };
@@ -45,6 +33,6 @@ const parseMultiDocument = (content: string): boolean => {
  * Return true if content is valid yaml.
  * @param content - Yaml file content
  */
-export const validateYaml = (content: string): boolean => {
-  return parseSingleDocument(content) || parseMultiDocument(content);
+export const validateDotYaml = (content: string): boolean => {
+  return parseYaml(content);
 };
