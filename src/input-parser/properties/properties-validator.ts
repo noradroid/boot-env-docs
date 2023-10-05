@@ -9,7 +9,7 @@ class PropertiesParseError extends Error {
   }
 }
 
-const formatYAMLParseError = (err: PropertiesParseError): string => {
+const formatPropertiesParseError = (err: PropertiesParseError): string => {
   return `${err.name} - caused by ${err.code}`;
 };
 
@@ -36,7 +36,7 @@ const parseProperties = (content: string): boolean => {
   } catch (err) {
     // PropertiesParseError
     if (err instanceof PropertiesParseError) {
-      console.error(formatYAMLParseError(err));
+      console.error(formatPropertiesParseError(err));
       // PropertiesParseError - caused by MISSING_VALUE_ASSIGN
       // = Property is not assigned a value
     } else {
