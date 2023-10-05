@@ -1,16 +1,7 @@
 import { Document, parseAllDocuments, YAMLParseError } from "yaml";
 
-const formatYAMLParseError = (err: YAMLParseError): string => {
-  return `${err.name} - caused by ${err.code}`;
-};
-
-const isDocumentValid = (document: Document): boolean => {
-  if (document.errors.length > 0) {
-    throw document.errors[0];
-  } else {
-    return true;
-  }
-};
+import { formatParseError } from "../utils/error-utils";
+import { isDocumentValid } from "./utils/yaml-utils";
 
 const parseYaml = (content: string): boolean => {
   try {
@@ -19,7 +10,7 @@ const parseYaml = (content: string): boolean => {
   } catch (err) {
     // YAMLParseError
     if (err instanceof YAMLParseError) {
-      console.error(formatYAMLParseError(err));
+      console.error(formatParseError(err));
       // YAMLParseError - caused by BLOCK_AS_IMPLICIT_KEY
       // = Nested mappings are not allowed in compact mappings
     } else {
