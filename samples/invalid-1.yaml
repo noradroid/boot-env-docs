@@ -1,6 +1,6 @@
 # ===============================================================
 # Spring Boot invalid application.yaml due to missing closing
-# bracket "}"
+# bracket "}".
 # ===============================================================
 
 spring:

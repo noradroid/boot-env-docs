@@ -1,7 +1,7 @@
 # ===============================================================
 # Spring Boot invalid application.yaml due to missing colon in
 # environment variable definition. Colon is needed to specify
-# empty default value, and without a colon the spring boot
+# empty default value, and without providing a value, spring boot
 # program will error and shut down on start.
 # ===============================================================
 
