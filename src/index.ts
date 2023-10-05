@@ -11,7 +11,8 @@ import {
 } from "./utils/env-var/env-var-parser";
 import { generateMdFromJson } from "./utils/md/md-generator";
 import { Mode } from "./utils/arg/mode.enum";
-import { validateYaml } from "./input-validation/yaml-validator";
+import { validateDotYaml } from "./input-parser/yaml/yaml-validator";
+import { validateDotProperties } from "./input-parser/properties/properties-validator";
 
 const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
   getModeInputFileOutputJsonOutputMd();
