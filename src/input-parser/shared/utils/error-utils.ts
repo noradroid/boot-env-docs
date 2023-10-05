@@ -1,6 +1,6 @@
 import { YAMLParseError } from "yaml";
 
-import { PropertiesParseError } from "../properties/errors/properties-parse.error";
+import { PropertiesParseError } from "../../properties/errors/properties-parse.error";
 
 /**
  * Format PropertiesParseError or YAMLParseError to display name and code.

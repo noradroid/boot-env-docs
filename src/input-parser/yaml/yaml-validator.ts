@@ -1,6 +1,6 @@
 import { Document, parseAllDocuments, YAMLParseError } from "yaml";
 
-import { formatParseError } from "../utils/error-utils";
+import { formatParseError } from "../shared/utils/error-utils";
 import { isDocumentValid } from "./utils/yaml-utils";
 
 const parseYaml = (content: string): boolean => {
