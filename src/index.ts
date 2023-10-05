@@ -11,6 +11,7 @@ import {
 } from "./utils/env-var/env-var-parser";
 import { generateMdFromJson } from "./utils/md/md-generator";
 import { Mode } from "./utils/arg/mode.enum";
+import { validateYaml } from "./input-validation/yaml-validator";
 
 const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
   getModeInputFileOutputJsonOutputMd();
@@ -21,6 +22,10 @@ if (mode === Mode.PARSE_JSON) {
   variablesDict = JSON.parse(readFile(inputFileName));
 } else {
   const file = readFile(inputFileName);
+  const valid = validateYaml(file);
+  if (!valid) {
+    process.exit(1);
+  }
 
   const properties = parseProperty(file, inputFileName);
 
