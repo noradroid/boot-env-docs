@@ -4,15 +4,13 @@ import fs from "fs";
 
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
 import readFile from "./utils/file/file-util";
-import parseProperty from "./utils/property/property-parser";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
 } from "./utils/env-var/env-var-parser";
 import { generateMdFromJson } from "./utils/md/md-generator";
 import { Mode } from "./utils/arg/mode.enum";
-import { validateDotYaml } from "./input-parser/yaml/yaml-validator";
-import { validateDotProperties } from "./input-parser/properties/properties-validator";
+import parseInputFileIntoKeyValuePairs from "./input-parser/main";
 
 const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
   getModeInputFileOutputJsonOutputMd();
@@ -23,31 +21,27 @@ if (mode === Mode.PARSE_JSON) {
   variablesDict = JSON.parse(readFile(inputFileName));
 } else {
   const file = readFile(inputFileName);
-  const valid = validateYaml(file);
-  if (!valid) {
-    process.exit(1);
-  }
 
-  const properties = parseProperty(file, inputFileName);
+  const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
 
-  variablesDict = getEnvVarInfoDict(properties);
+  variablesDict = getEnvVarInfoDict(keyValuePairs);
 }
 
 const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 
 console.log(JSON.stringify(variablesArr, undefined, 2));
 
-if (mode === Mode.PARSE_PROPERTY) {
-  try {
-    fs.writeFileSync(
-      jsonOutputFileName,
-      JSON.stringify(variablesDict, undefined, 2)
-    );
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
+// if (mode === Mode.PARSE_PROPERTY) {
+try {
+  fs.writeFileSync(
+    jsonOutputFileName,
+    JSON.stringify(variablesDict, undefined, 2)
+  );
+} catch (err) {
+  console.error(err);
+  process.exit(1);
 }
+// }
 
 const doc = generateMdFromJson(variablesArr);
 

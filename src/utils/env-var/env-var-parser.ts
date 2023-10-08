@@ -1,12 +1,12 @@
 import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
-import { Property } from "../property/property.type";
 import {
   CURLY_OPENING_BRACE,
   ENV_VAR_CLOSING_BRACE,
   ENV_VAR_OPENING_BRACE,
 } from "./tokens";
 import { isString } from "../misc/type-util";
+import { KeyValuePairs } from "../../input-parser/shared/types/key-value.type";
 
 const isOutOfBounds = (index: number, length: number): boolean => {
   return index >= length || index === -1;
@@ -123,7 +123,7 @@ const getEnvVars = (value: string): EnvVar[] => {
   return envVars;
 };
 
-export const getEnvVarInfoDict = (properties: Property[]): EnvVarDict => {
+export const getEnvVarInfoDict = (properties: KeyValuePairs): EnvVarDict => {
   const variables: EnvVarDict = {};
 
   properties.forEach((prop) => {
