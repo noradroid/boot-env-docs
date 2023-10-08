@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
+import {
+  getEnvVarInfoDict,
+  convertEnvVarInfoDictToArr,
+} from "./env-var-parser/env-var-parser";
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
 import { readFile, writeFile } from "./utils/file/file-utils";
-import {
-  convertEnvVarInfoDictToArr,
-  getEnvVarInfoDict,
-} from "./utils/env-var/env-var-parser";
 import { generateMdFromJson } from "./utils/md/md-generator";
 import { Mode } from "./utils/arg/mode.enum";
 import parseInputFileIntoKeyValuePairs from "./input-parser/main";

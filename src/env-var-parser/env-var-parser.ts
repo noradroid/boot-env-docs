@@ -1,12 +1,12 @@
-import { EnvVarArr, EnvVarDict } from "./env-var-info.type";
+import { KeyValuePairs } from "../input-parser/shared/types/key-value.type";
+import { isString } from "../utils/misc/type-util";
+import { EnvVarDict, EnvVarArr } from "./env-var-info.type";
 import { EnvVar } from "./env-var.type";
 import {
-  CURLY_OPENING_BRACE,
-  ENV_VAR_CLOSING_BRACE,
   ENV_VAR_OPENING_BRACE,
+  ENV_VAR_CLOSING_BRACE,
+  CURLY_OPENING_BRACE,
 } from "./tokens";
-import { isString } from "../misc/type-util";
-import { KeyValuePairs } from "../../input-parser/shared/types/key-value.type";
 
 const isOutOfBounds = (index: number, length: number): boolean => {
   return index >= length || index === -1;
