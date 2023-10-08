@@ -1,12 +1,13 @@
 import { KeyValuePairs } from "../input-parser/shared/types/key-value.type";
 import { isString } from "../utils/misc/type-util";
-import { EnvVarDict, EnvVarArr } from "./env-var-info.type";
-import { EnvVar } from "./env-var.type";
 import {
   ENV_VAR_OPENING_BRACE,
   ENV_VAR_CLOSING_BRACE,
-  CURLY_OPENING_BRACE,
-} from "./tokens";
+  OPENING_CURLY_BRACE,
+} from "./constants/tokens";
+import { EnvVarDict, EnvVarArr } from "./env-var-info.type";
+import { tokenise } from "./env-var-tokeniser";
+import { EnvVar } from "./env-var.type";
 
 const isOutOfBounds = (index: number, length: number): boolean => {
   return index >= length || index === -1;
@@ -50,7 +51,7 @@ const getEnvVarClosingBraceIndex = (
   while (
     value
       .substring(startingCheckIndex, closingBraceIndex)
-      .includes(CURLY_OPENING_BRACE)
+      .includes(OPENING_CURLY_BRACE)
   ) {
     startingCheckIndex = closingBraceIndex + 1;
     closingBraceIndex = value.indexOf(
@@ -127,6 +128,7 @@ export const getEnvVarInfoDict = (properties: KeyValuePairs): EnvVarDict => {
   const variables: EnvVarDict = {};
 
   properties.forEach((prop) => {
+    tokenise(prop.value);
     if (isString(prop.value)) {
       const envVars = getEnvVars(prop.value);
       envVars.forEach((envVar) => {
