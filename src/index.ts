@@ -3,7 +3,7 @@
 import fs from "fs";
 
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
-import readFile from "./utils/file/file-util";
+import { readFile } from "./utils/file/file-utils";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,

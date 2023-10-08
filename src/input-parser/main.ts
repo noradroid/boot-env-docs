@@ -1,11 +1,11 @@
-import { FileType } from "./shared/types/file.type";
-import { getFileType } from "./shared/utils/file-type.utils";
-import { validateDotYaml } from "./yaml/yaml-validator";
-import readFile from "../utils/file/file-util";
-import { validateDotProperties } from "./properties/properties-validator";
-import { KeyValuePairs } from "./shared/types/key-value.type";
+import { readFile } from "../utils/file/file-utils";
 import { parseDotProperties } from "./properties/properties-parser";
+import { validateDotProperties } from "./properties/properties-validator";
+import { FileType } from "./shared/types/file.type";
+import { KeyValuePairs } from "./shared/types/key-value.type";
+import { getFileType } from "./shared/utils/file-type.utils";
 import { parseDotYaml } from "./yaml/yaml-parser";
+import { validateDotYaml } from "./yaml/yaml-validator";
 
 const main = (fileName: string) => {
   const fileType = getFileType(fileName);
