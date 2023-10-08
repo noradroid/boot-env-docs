@@ -14,3 +14,12 @@ export const readFile = (fileName: string): string => {
   const file = fs.readFileSync(fileName, "utf8");
   return file;
 };
+
+export const writeFile = (fileName: string, contents: string): void => {
+  try {
+    fs.writeFileSync(fileName, contents);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};

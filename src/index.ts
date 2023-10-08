@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
-import { readFile } from "./utils/file/file-utils";
+import { readFile, writeFile } from "./utils/file/file-utils";
 import {
   convertEnvVarInfoDictToArr,
   getEnvVarInfoDict,
@@ -32,22 +30,9 @@ const variablesArr = convertEnvVarInfoDictToArr(variablesDict);
 console.log(JSON.stringify(variablesArr, undefined, 2));
 
 // if (mode === Mode.PARSE_PROPERTY) {
-try {
-  fs.writeFileSync(
-    jsonOutputFileName,
-    JSON.stringify(variablesDict, undefined, 2)
-  );
-} catch (err) {
-  console.error(err);
-  process.exit(1);
-}
+writeFile(jsonOutputFileName, JSON.stringify(variablesDict, undefined, 2));
 // }
 
 const doc = generateMdFromJson(variablesArr);
 
-try {
-  fs.writeFileSync(mdOutputFileName, doc);
-} catch (err) {
-  console.error(err);
-  process.exit(1);
-}
+writeFile(mdOutputFileName, doc);
