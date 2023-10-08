@@ -1,10 +1,22 @@
 import { KeyValue } from "../../shared/types/key-value.type";
-import { EQUAL_SEPARATOR, NEWLINE_SEPARATOR } from "../constants/tokens";
+import {
+  COMMENT_CHARACTER,
+  EQUAL_SEPARATOR,
+  NEWLINE_SEPARATOR,
+} from "../constants/tokens";
 import { PropertiesParseError } from "../errors/properties-parse.error";
 import { Line } from "../types/line.type";
 
-const isNonEmptyLine = (line: string): boolean => {
-  return line.trim().length > 0;
+const trimLine = (line: string): string => {
+  return line.trim();
+};
+
+const isNotEmptyLine = (line: string): boolean => {
+  return line.length > 0;
+};
+
+const isNotComment = (line: string): boolean => {
+  return !line.startsWith(COMMENT_CHARACTER);
 };
 
 export const isLineValid = (line: string): boolean => {
@@ -16,7 +28,11 @@ export const isLineValid = (line: string): boolean => {
 };
 
 export const splitPropertiesIntoLines = (content: string): Line[] => {
-  return content.split(NEWLINE_SEPARATOR).filter(isNonEmptyLine);
+  return content
+    .split(NEWLINE_SEPARATOR)
+    .map(trimLine)
+    .filter(isNotEmptyLine)
+    .filter(isNotComment);
 };
 
 /**
