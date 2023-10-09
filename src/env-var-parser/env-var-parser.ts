@@ -7,6 +7,7 @@ import {
 } from "./constants/tokens";
 import { EnvVarDict, EnvVarArr } from "./env-var-info.type";
 import { tokenise } from "./env-var-tokeniser";
+import { validateEnvVarSyntax } from "./env-var-validator";
 import { EnvVar } from "./env-var.type";
 
 const isOutOfBounds = (index: number, length: number): boolean => {
@@ -128,7 +129,8 @@ export const getEnvVarInfoDict = (properties: KeyValuePairs): EnvVarDict => {
   const variables: EnvVarDict = {};
 
   properties.forEach((prop) => {
-    tokenise(prop.value);
+    const tokens = tokenise(prop.value);
+    const validation = validateEnvVarSyntax(tokens);
     if (isString(prop.value)) {
       const envVars = getEnvVars(prop.value);
       envVars.forEach((envVar) => {
