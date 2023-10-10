@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import {
-  getEnvVarInfoDict,
+  // getEnvVarInfoDict,
   convertEnvVarInfoDictToArr,
 } from "./env-var-parser/env-var-parser";
 import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
@@ -9,6 +9,7 @@ import { readFile, writeFile } from "./utils/file/file-utils";
 import { generateMdFromJson } from "./utils/md/md-generator";
 import { Mode } from "./utils/arg/mode.enum";
 import parseInputFileIntoKeyValuePairs from "./input-parser/main";
+import getEnvVarInfoDict from "./env-var-parser/main";
 
 const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
   getModeInputFileOutputJsonOutputMd();
