@@ -1,4 +1,4 @@
-import { formatParseError } from "../shared/utils/error-utils";
+import { formatParseError } from "../../utils/error/error-utils";
 import { PropertiesParseError } from "./errors/properties-parse.error";
 import {
   isLineValid,
