@@ -5,6 +5,7 @@ import {
   ENV_VAR_OPENING_BRACE,
   OPENING_CURLY_BRACE,
 } from "./constants/tokens";
+import { EnvVarParseError } from "./errors/env-var-parse.error";
 import { Token, Tokens } from "./types/tokens.type";
 
 const isTokenOneOfInvalidTokens = (
@@ -17,7 +18,6 @@ const isTokenOneOfInvalidTokens = (
 export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
   let currIndex = 0;
   let openedBracketsCount = 0;
-  let currEnvVarTokens = [];
 
   let prevToken: string | null = null;
 
@@ -34,16 +34,15 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
       if (tokens[currIndex] === COLON_SEPARATOR) {
         prevToken = tokens[currIndex];
         currIndex += 1;
+      } else if (tokens[currIndex] === ENV_VAR_CLOSING_BRACE) {
+        throw new EnvVarParseError("MISSING_COLON");
       } else if (
         isTokenOneOfInvalidTokens(tokens[currIndex], [
           ENV_VAR_OPENING_BRACE,
           OPENING_CURLY_BRACE,
-          ENV_VAR_CLOSING_BRACE,
         ])
       ) {
-        throw new Error(
-          `Invalid token after environment variable opening brace: '${tokens[currIndex]}'`
-        );
+        throw new EnvVarParseError("MISSING_CLOSING_BRACE");
       } else {
         currIndex += 1;
       }
@@ -86,15 +85,13 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
         currIndex += 1;
       }
     } else {
-      throw new Error("There's no way you got here");
+      throw new EnvVarParseError("IDK_WHAT_HAPPENED");
     }
   }
 
   if (prevToken === null) {
     return true;
   } else {
-    throw new Error(
-      "Environment variable definition should be closed with a closing brace '}'"
-    );
+    throw new EnvVarParseError("MISSING_CLOSING_BRACE");
   }
 };
