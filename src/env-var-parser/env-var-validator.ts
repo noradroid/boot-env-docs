@@ -26,14 +26,12 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
       if (tokens[currIndex] === ENV_VAR_OPENING_BRACE) {
         openedBracketsCount += 1;
         prevToken = tokens[currIndex];
-        currIndex += 1;
       } else {
         return false;
       }
     } else if (prevToken === ENV_VAR_OPENING_BRACE) {
       if (tokens[currIndex] === COLON_SEPARATOR) {
         prevToken = tokens[currIndex];
-        currIndex += 1;
       } else if (tokens[currIndex] === ENV_VAR_CLOSING_BRACE) {
         throw new EnvVarParseError("MISSING_COLON");
       } else if (
@@ -43,20 +41,14 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
         ])
       ) {
         throw new EnvVarParseError("MISSING_CLOSING_BRACE");
-      } else {
-        currIndex += 1;
       }
     } else if (prevToken === COLON_SEPARATOR) {
       if (tokens[currIndex] === ENV_VAR_CLOSING_BRACE) {
         openedBracketsCount -= 1;
         prevToken = null;
-        currIndex += 1;
       } else if (tokens[currIndex] === OPENING_CURLY_BRACE) {
         openedBracketsCount += 1;
         prevToken = tokens[currIndex];
-        currIndex += 1;
-      } else {
-        currIndex += 1;
       }
     } else if (prevToken === OPENING_CURLY_BRACE) {
       if (tokens[currIndex] === CLOSING_CURLY_BRACE) {
@@ -66,9 +58,6 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
         } else {
           prevToken = tokens[currIndex];
         }
-        currIndex += 1;
-      } else {
-        currIndex += 1;
       }
     } else if (prevToken === CLOSING_CURLY_BRACE) {
       if (tokens[currIndex] === CLOSING_CURLY_BRACE) {
@@ -78,15 +67,14 @@ export const validateEnvVarSyntax = (tokens: Tokens): boolean => {
         } else {
           prevToken = tokens[currIndex];
         }
-        currIndex += 1;
       } else if (tokens[currIndex] === OPENING_CURLY_BRACE) {
         openedBracketsCount += 1;
         prevToken = tokens[currIndex];
-        currIndex += 1;
       }
     } else {
       throw new EnvVarParseError("IDK_WHAT_HAPPENED");
     }
+    currIndex += 1;
   }
 
   if (prevToken === null) {
