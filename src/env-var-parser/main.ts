@@ -4,7 +4,12 @@ import { isString } from "../utils/misc/type-util";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";
 import { validateEnvVarSyntax } from "./env-var-validator";
+import {
+  convertValueIntoType,
+  getValueType,
+} from "./env-var-value-type/env-var-value-type-parser";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
+import { Default } from "./types/default.type";
 import { EnvVarDict } from "./types/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
@@ -37,18 +42,25 @@ const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
     if (isString(keyValue.value)) {
       const envVarDefaults = getEnvVarDefaults(keyValue.value);
       envVarDefaults.forEach((envVarDefault) => {
+        const valueType = getValueType(envVarDefault.default);
+        const defaultValue: Default = convertValueIntoType(
+          envVarDefault.default,
+          valueType
+        );
         if (!(envVarDefault.envVar in variables)) {
           variables[envVarDefault.envVar] = {
             envVar: envVarDefault.envVar,
             description: "",
-            type: "",
-            default: envVarDefault.default,
+            type: valueType,
+            default: defaultValue,
             instances: [],
           };
         }
+        variables[envVarDefault.envVar].type = valueType;
+        variables[envVarDefault.envVar].default = defaultValue;
         variables[envVarDefault.envVar].instances.push({
           key: keyValue.key,
-          default: envVarDefault.default,
+          default: defaultValue,
         });
       });
     }

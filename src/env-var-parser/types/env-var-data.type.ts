@@ -6,11 +6,11 @@ export type EnvVarData = {
   envVar: string;
   description: string;
   type: string;
-  default?: Default | null;
+  default?: Default;
   instances: EnvVarInstance[];
 };
 
 export type EnvVarInstance = {
   key: string;
-  default: Default | null;
+  default: Default;
 };
