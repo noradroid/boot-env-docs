@@ -1,0 +1,56 @@
+# ===============================================================
+# Spring Boot valid application.yaml in multi document
+# ===============================================================
+
+spring:
+  config:
+    activate:
+      on-profile: "!api-docs"
+---
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+    application:
+      name: ${APP_NAME:valid}
+  jpa:
+    properties:
+      hibernate.jdbc.time_zone: UTC
+      hibernate.jdbc.batch_size: ${JDBC_BATCH_SIZE:25}
+    hibernate:
+      ddl-auto: none
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: ${KEYCLOAK_URL:https://keycloak.org}/auth/realms/${KEYCLOAK_REALM:test}
+        registration:
+          oidc:
+            client-id: ${KEYCLOAK_CLIENT_ID:client}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:secret}
+    default-src: default-src 'self';
+    frame-src: ${IFRAME_CSP:}
+    script-src: ${IFRAME_CSP:}
+    style-src: ${IFRAME_CSP:}
+    img-src: ${IFRAME_CSP:}
+    font-src: ${IFRAME_CSP:}
+    connect-src: ${CONNECT_CSP:}
+---
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DATABASE_CONNECTION_URL:jdbc:postgresql://localhost:5432/db}
+    username: admin
+    password: password
+  jpa:
+    database-platform: ${DATABASE_DIALECT:tech.jhipster.domain.util.FixedPostgreSQL10Dialect}
+---
+services:
+  endpoint-1: ${ENDPOINT_1:}
+  endpoint-2: ${ENDPOINT_2:}
+---
+services:
+  database-connection:
+    connect: ${CONNECT_TO_DB:True}
