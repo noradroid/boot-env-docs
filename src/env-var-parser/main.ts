@@ -10,7 +10,7 @@ import {
 } from "./env-var-value-type/env-var-value-type-parser";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
 import { Default } from "./types/default.type";
-import { EnvVarDict } from "./types/env-var-data.type";
+import { EnvVarData, EnvVarDict } from "./types/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
 const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
@@ -69,3 +69,24 @@ const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
 };
 
 export default main;
+
+export const mergeEnvVarDicts = (
+  oldDict: EnvVarDict,
+  newDict: EnvVarDict
+): EnvVarDict => {
+  const updated = { ...oldDict };
+  Object.entries(newDict).forEach(([envVar, data]: [string, EnvVarData]) => {
+    if (envVar in updated) {
+      const updatedInstances = updated[envVar].instances;
+      updatedInstances.push(...data.instances);
+      updated[envVar] = {
+        ...updated[envVar],
+        default: data.default,
+        instances: updatedInstances,
+      };
+    } else {
+      updated[envVar] = data;
+    }
+  });
+  return updated;
+};
