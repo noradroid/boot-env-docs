@@ -11,8 +11,7 @@ import { FileType } from "./types/file.type";
 
 const validateFileExists = (fileName: string): void => {
   if (!fs.existsSync(fileName)) {
-    console.error(`${fileName} does not exist`);
-    process.exit(1);
+    throw new Error(`${fileName} does not exist`);
   }
 };
 
@@ -28,8 +27,7 @@ export const writeFile = (fileName: string, contents: string): void => {
   try {
     fs.writeFileSync(fileName, contents);
   } catch (err) {
-    console.error(err);
-    process.exit(1);
+    throw err;
   }
 };
 

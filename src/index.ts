@@ -1,36 +1,86 @@
 #!/usr/bin/env node
 
-import getModeInputFileOutputJsonOutputMd from "./utils/arg/arg-parser";
 import { readFile, writeFile } from "./utils/file/file-utils";
 import { generateMdFromJson } from "./md-generator/md-generator";
-import { Mode } from "./utils/arg/mode.enum";
 import parseInputFileIntoKeyValuePairs from "./input-parser/main";
 import parseKeyValuePairsIntoEnvVarDict, {
   mergeEnvVarDicts,
 } from "./env-var-parser/main";
+import { parseArgs } from "./arg-parser/arg-parser";
+import { Command } from "./arg-parser/types/command.type";
+import { EnvVarDict } from "./env-var-parser/types/env-var-data.type";
 
-const [mode, inputFileName, jsonOutputFileName, mdOutputFileName] =
-  getModeInputFileOutputJsonOutputMd();
+const skipDictMergeIfJsonFileNotExist = (
+  jsonFileName: string,
+  dictToMerge: EnvVarDict
+): EnvVarDict => {
+  // Skip if json file does not exist
+  try {
+    const ogDict = JSON.parse(readFile(jsonFileName));
 
-let variablesDict: any = {};
+    return mergeEnvVarDicts(ogDict, dictToMerge);
+  } catch (err) {
+    console.log(
+      `Json file ${jsonFileName} does not exist, will be creating it...`
+    );
+    return dictToMerge;
+  }
+};
 
-if (mode === Mode.PARSE_JSON) {
-  variablesDict = JSON.parse(readFile(inputFileName));
-} else {
-  const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
+const main = () => {
+  const fileArgs = parseArgs();
 
-  variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
+  let variablesDict: any = {};
 
-  const ogDict = JSON.parse(readFile(jsonOutputFileName));
-  variablesDict = mergeEnvVarDicts(ogDict, variablesDict);
-}
+  if (fileArgs.command === Command.PARSE) {
+    const inputFileName = fileArgs.configFile;
+    const jsonFileName = fileArgs.jsonFile;
 
-console.log(JSON.stringify(variablesDict, undefined, 2));
+    const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
 
-// if (mode === Mode.PARSE_PROPERTY) {
-writeFile(jsonOutputFileName, JSON.stringify(variablesDict, undefined, 2));
-// }
+    variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
-const doc = generateMdFromJson(variablesDict);
+    variablesDict = skipDictMergeIfJsonFileNotExist(
+      jsonFileName,
+      variablesDict
+    );
 
-writeFile(mdOutputFileName, doc);
+    console.log(JSON.stringify(variablesDict, undefined, 2));
+
+    writeFile(jsonFileName, JSON.stringify(variablesDict, undefined, 2));
+  } else if (fileArgs.command === Command.GEN) {
+    const jsonFileName = fileArgs.jsonFile;
+    const mdFileName = fileArgs.mdFile;
+
+    variablesDict = JSON.parse(readFile(jsonFileName));
+
+    console.log(JSON.stringify(variablesDict, undefined, 2));
+
+    const doc = generateMdFromJson(variablesDict);
+
+    writeFile(mdFileName, doc);
+  } else {
+    const inputFileName = fileArgs.configFile;
+    const jsonFileName = fileArgs.jsonFile;
+    const mdFileName = fileArgs.mdFile;
+
+    const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
+
+    variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
+
+    variablesDict = skipDictMergeIfJsonFileNotExist(
+      jsonFileName,
+      variablesDict
+    );
+
+    console.log(JSON.stringify(variablesDict, undefined, 2));
+
+    writeFile(jsonFileName, JSON.stringify(variablesDict, undefined, 2));
+
+    const doc = generateMdFromJson(variablesDict);
+
+    writeFile(mdFileName, doc);
+  }
+};
+
+main();

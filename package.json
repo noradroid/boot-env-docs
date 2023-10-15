@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "node": "node dist/index.js -m parseproperty -f application.yml -j records.json -o document.md",
+    "node": "node dist/index.js p samples/invalid-1.yaml test.json",
     "build-run": "npm run build && npm run node",
-    "nodemon": "nodemon src/index.ts -m parseproperty -f test.yaml -j records.json -o document.md",
+    "nodemon": "nodemon src/index.ts p samples/valid-multi.yaml test.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
