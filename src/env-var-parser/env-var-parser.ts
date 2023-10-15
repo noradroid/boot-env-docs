@@ -13,7 +13,7 @@ const parseTokensIntoEnvVarDefault = (
 ): EnvVarDefault => {
   const colonIndex = tokens.indexOf(COLON_SEPARATOR, startIndex);
   const envVar = tokens[colonIndex - 1];
-  const defaultStr = tokens.slice(colonIndex + 1, endIndex).join();
+  const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");
   return { envVar, default: defaultStr };
 };
 
