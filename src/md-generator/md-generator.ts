@@ -20,11 +20,7 @@ export const generateMdFromJson = (dict: EnvVarDict): string => {
     md.paragraph(`${bold("Default value:")}`);
 
     md.paragraph(
-      `${parseTextIntoCode(
-        String(info.instances[0].default) === ""
-          ? "<empty>"
-          : String(info.instances[0].default)
-      )}`
+      parseTextIntoCode(info.instances[0].default?.toString() ?? "<empty>")
     );
 
     md.paragraph(`${bold("Used in:")}`);

@@ -1,1 +1,1 @@
-export type Default = string | number | boolean;
+export type Default = string | number | boolean | null;

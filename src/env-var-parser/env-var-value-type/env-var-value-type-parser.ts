@@ -1,6 +1,10 @@
 import { Default } from "../types/default.type";
 import { ValueType } from "./types/value-type.type";
 
+const isEmpty = (value: string): boolean => {
+  return value === "";
+};
+
 const isNumber = (value: string): boolean => {
   return value.length === 0 ? false : !Number.isNaN(Number(value));
 };
@@ -16,7 +20,9 @@ const isBoolean = (value: string): boolean => {
 };
 
 export const getValueType = (value: string): ValueType => {
-  if (isNumber(value)) {
+  if (isEmpty(value)) {
+    return "empty";
+  } else if (isNumber(value)) {
     return "number";
   } else if (isBoolean(value)) {
     return "boolean";
@@ -37,7 +43,9 @@ export const convertValueIntoType = (
   value: string,
   type: ValueType
 ): Default => {
-  if (type === "number") {
+  if (type === "empty") {
+    return null;
+  } else if (type === "number") {
     return convertIntoNumber(value);
   } else if (type === "boolean") {
     return convertIntoBoolean(value);
