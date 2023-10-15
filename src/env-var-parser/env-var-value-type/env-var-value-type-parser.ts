@@ -21,7 +21,7 @@ const isBoolean = (value: string): boolean => {
 
 export const getValueType = (value: string): ValueType => {
   if (isEmpty(value)) {
-    return "empty";
+    return "unknown";
   } else if (isNumber(value)) {
     return "number";
   } else if (isBoolean(value)) {
@@ -43,7 +43,7 @@ export const convertValueIntoType = (
   value: string,
   type: ValueType
 ): Default => {
-  if (type === "empty") {
+  if (type === "unknown") {
     return null;
   } else if (type === "number") {
     return convertIntoNumber(value);

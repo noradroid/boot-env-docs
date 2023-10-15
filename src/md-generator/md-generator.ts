@@ -15,7 +15,7 @@ export const generateMdFromJson = (dict: EnvVarDict): string => {
   Object.values(dict).forEach((info) => {
     md.header(info.envVar, 3).paragraph(info.description);
 
-    md.paragraph(`${bold("Type:")} ${info.type ?? "unknown"}`);
+    md.paragraph(`${bold("Type:")} ${info.type}`);
 
     md.paragraph(`${bold("Default value:")}`);
 
