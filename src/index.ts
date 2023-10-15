@@ -6,7 +6,7 @@ import parseKeyValuePairsIntoEnvVarDict, {
   mergeEnvVarDicts,
 } from "./env-var-parser/main";
 import { EnvVarDict } from "./env-var-parser/types/env-var-data.type";
-import parseInputFileIntoKeyValuePairs from "./input-parser/main";
+import parseInputFileIntoKeyValuePairs from "./config-parser/main";
 import { generateMdFromJson } from "./md-generator/md-generator";
 import { writeFile, isFileExist, readFile } from "./utils/file/file-utils";
 import { isObjsEqual } from "./utils/misc/helper-utils";
