@@ -5,7 +5,9 @@ export type FileArgs = ParseFileArgs | GenFileArgs | ParseGenFileArgs;
 export type ParseFileArgs = {
   command: Command.PARSE;
 } & ConfigFile &
-  JsonFile;
+  JsonFile & {
+    append: boolean;
+  };
 
 export type GenFileArgs = {
   command: Command.GEN;
@@ -16,7 +18,9 @@ export type ParseGenFileArgs = {
   command: Command.PARSE_GEN;
 } & ConfigFile &
   JsonFile &
-  MdFile;
+  MdFile & {
+    append: boolean;
+  };
 
 export type ConfigFile = {
   configFile: string;

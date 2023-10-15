@@ -35,12 +35,13 @@ const main = () => {
   if (fileArgs.command === Command.PARSE) {
     const inputFileName = fileArgs.configFile;
     const jsonFileName = fileArgs.jsonFile;
+    const append = fileArgs.append;
 
     const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
-    if (isFileExist(jsonFileName)) {
+    if (append && isFileExist(jsonFileName)) {
       const ogDict = JSON.parse(readFile(jsonFileName));
 
       variablesDict = mergeEnvVarDicts(ogDict, variablesDict);
@@ -75,12 +76,13 @@ const main = () => {
     const inputFileName = fileArgs.configFile;
     const jsonFileName = fileArgs.jsonFile;
     const mdFileName = fileArgs.mdFile;
+    const append = fileArgs.append;
 
     const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
-    if (isFileExist(jsonFileName)) {
+    if (append && isFileExist(jsonFileName)) {
       const ogDict = JSON.parse(readFile(jsonFileName));
 
       variablesDict = mergeEnvVarDicts(ogDict, variablesDict);

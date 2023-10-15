@@ -8,6 +8,7 @@ import {
   PARSE_GEN_CMD,
   PARSE_GEN_CMD_SH,
 } from "./constants/commands";
+import { APPEND_FLAG } from "./constants/flags";
 import { Command } from "./types/command.type";
 import {
   FileArgs,
@@ -27,8 +28,13 @@ export const getArgs = (): string[] => {
   return process.argv.slice(2);
 };
 
-export const getFileNames = (args: string[]): string[] => {
-  return args.slice(1);
+export const getFileNames = (args: string[], append: boolean): string[] => {
+  const argsAfterCmd = args.slice(1);
+  if (append) {
+    const appendIndex = argsAfterCmd.findIndex((arg) => arg === APPEND_FLAG);
+    argsAfterCmd.splice(appendIndex, 1);
+  }
+  return argsAfterCmd;
 };
 
 // command arg
@@ -56,6 +62,13 @@ export const getCommand = (args: string[]): Command => {
     console.error("Command not provided.");
     process.exit(1);
   }
+};
+
+// append flag
+
+export const getAppendFlag = (args: string[]): boolean => {
+  const append = args.find((a) => a === APPEND_FLAG);
+  return !!append;
 };
 
 // file args
@@ -110,11 +123,15 @@ export const validateFileNames = (command: Command, fileNames: string[]) => {
   }
 };
 
-export const getParseFileArgs = (fileNames: string[]): ParseFileArgs => {
+export const getParseFileArgs = (
+  fileNames: string[],
+  append: boolean
+): ParseFileArgs => {
   return {
     command: Command.PARSE,
     configFile: fileNames[0],
     jsonFile: fileNames[1],
+    append,
   };
 };
 
@@ -126,24 +143,29 @@ export const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
   };
 };
 
-export const getParseGenFileArgs = (fileNames: string[]): ParseGenFileArgs => {
+export const getParseGenFileArgs = (
+  fileNames: string[],
+  append: boolean
+): ParseGenFileArgs => {
   return {
     command: Command.PARSE_GEN,
     configFile: fileNames[0],
     jsonFile: fileNames[1],
     mdFile: fileNames[2],
+    append,
   };
 };
 
 export const getFileArgs = (
   command: Command,
-  fileNames: string[]
+  fileNames: string[],
+  append: boolean
 ): FileArgs => {
   if (command === Command.PARSE) {
-    return getParseFileArgs(fileNames);
+    return getParseFileArgs(fileNames, append);
   } else if (command === Command.GEN) {
     return getGenFileArgs(fileNames);
   } else {
-    return getParseGenFileArgs(fileNames);
+    return getParseGenFileArgs(fileNames, append);
   }
 };

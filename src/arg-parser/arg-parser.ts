@@ -1,5 +1,6 @@
 import {
   checkArgsProvided,
+  getAppendFlag,
   getArgs,
   getCommand,
   getFileArgs,
@@ -15,9 +16,11 @@ export const parseArgs = (): FileArgs => {
 
   const command: Command = getCommand(args);
 
-  const fileNames = getFileNames(args);
+  const append: boolean = getAppendFlag(args);
 
-  const fileArgs: FileArgs = getFileArgs(command, fileNames);
+  const fileNames = getFileNames(args, append);
+
+  const fileArgs: FileArgs = getFileArgs(command, fileNames, append);
 
   return fileArgs;
 };
