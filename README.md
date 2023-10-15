@@ -90,30 +90,40 @@ property: ${PROPERTY:property A
 
 Replace the script for "node" in `package.json` with one of the following. Then run `npm run build-run`.
 
-#### Get environment variables from yaml file
+#### Get environment variables from yaml file and generate markdown file
 
 ```
-node dist/index.js -m parseproperty -f application.yaml -j output.json -m output.md
+node dist/index.js pg application.yaml output.json output.md
 ```
 
-- read from application.yaml file
+- parse from application.yaml file
 - store environment variables in output.json
-- produce markdown file output.md based on output.json
+- generate markdown file output.md based on output.json
 
 #### Get environment variables from properties file
 
 ```
-node dist/index.js -m parseproperty -f application.properties -j output.json -m output.md
+node dist/index.js pg application.properties output.json output.md
 ```
 
 - same as yaml version
 
-#### Produce markdown file from edited output.json
+#### Generate markdown file from edited output.json
 
 ```
-node dist/index.js -m parsejson -f output.json -m output.md
+node dist/index.js g output.json output.md
 ```
 
-- produce markdown file output.md based on output.json
-- provide ability to add more information to each variable (description, type) to print in documentation
+- generate markdown file output.md based on output.json
 
+This provide ability to add more information to each variable (description, type) to print in documentation
+
+#### Get environment variables from yaml file and append to json file
+
+```
+node dist/index.js p application.yaml output.json output.md
+```
+
+- parse from application.yaml file
+- append environment variables to output.json if existing
+- generate markdown file output.md based on output.json
