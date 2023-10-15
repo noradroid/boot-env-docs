@@ -3,7 +3,7 @@ import { formatParseError } from "../utils/error/error-utils";
 import { clone, isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";
-import { findInstanceIndex, isInstanceInArr } from "./env-var-utils";
+import { findInstanceIndex } from "./env-var-utils";
 import { validateEnvVarSyntax } from "./env-var-validator";
 import {
   convertValueIntoType,

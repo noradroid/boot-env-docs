@@ -31,12 +31,3 @@ export const findInstanceIndex = (
 ): number => {
   return arr.findIndex((ins) => ins.key === key);
 };
-
-export const isInstanceInArr = (
-  arr: EnvVarInstance[],
-  instance: EnvVarInstance
-): boolean => {
-  return !!arr.find(
-    (ins) => ins.key === instance.key && ins.default === instance.default
-  );
-};

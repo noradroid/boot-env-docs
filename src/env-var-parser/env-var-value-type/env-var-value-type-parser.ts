@@ -2,7 +2,7 @@ import { Default } from "../types/default.type";
 import { ValueType } from "./types/value-type.type";
 
 const isNumber = (value: string): boolean => {
-  return !Number.isNaN(Number(value));
+  return value.length === 0 ? false : !Number.isNaN(Number(value));
 };
 
 const TRUE_VALUE = "true";
