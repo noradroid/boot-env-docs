@@ -1,5 +1,5 @@
 import { Markdown, bold } from "@scdev/declarative-markdown";
-import { EnvVarDict } from "../../env-var-parser/types/env-var-data.type";
+import { EnvVarDict } from "../env-var-parser/types/env-var-data.type";
 
 const parseTextIntoCode = (text: string): string => {
   return `
@@ -15,12 +15,12 @@ export const generateMdFromJson = (dict: EnvVarDict): string => {
   Object.values(dict).forEach((info) => {
     md.header(info.envVar, 3).paragraph(info.description);
 
-    md.paragraph(`${bold("Type:")} ${info.type ?? "unknown"}`);
+    md.paragraph(`${bold("Type:")} ${info.type}`);
 
     md.paragraph(`${bold("Default value:")}`);
 
     md.paragraph(
-      `${parseTextIntoCode(info.instances[0].default?.toString() ?? "<empty>")}`
+      parseTextIntoCode(info.instances[0].default?.toString() ?? "<empty>")
     );
 
     md.paragraph(`${bold("Used in:")}`);

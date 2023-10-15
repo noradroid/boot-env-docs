@@ -6,8 +6,6 @@ export const COLON_SEPARATOR = ":";
 
 export const DOLLAR_SIGN = "$";
 
-export const WHITESPACE = " ";
-
 // Use for matching bracket checks
 
 export const OPENING_CURLY_BRACE = "{";

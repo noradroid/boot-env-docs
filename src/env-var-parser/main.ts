@@ -1,8 +1,9 @@
 import { KeyValuePairs } from "../input-parser/shared/types/key-value.type";
 import { formatParseError } from "../utils/error/error-utils";
-import { isString } from "../utils/misc/type-util";
+import { clone, isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";
+import { findInstanceIndex } from "./env-var-utils";
 import { validateEnvVarSyntax } from "./env-var-validator";
 import {
   convertValueIntoType,
@@ -10,7 +11,11 @@ import {
 } from "./env-var-value-type/env-var-value-type-parser";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
 import { Default } from "./types/default.type";
-import { EnvVarDict } from "./types/env-var-data.type";
+import {
+  EnvVarData,
+  EnvVarDict,
+  EnvVarInstance,
+} from "./types/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
 const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
@@ -69,3 +74,47 @@ const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
 };
 
 export default main;
+
+const mergeInstances = (
+  oldInstances: EnvVarInstance[],
+  newInstances: EnvVarInstance[]
+): EnvVarInstance[] => {
+  const mergedInstances: EnvVarInstance[] = clone(oldInstances);
+  newInstances.forEach((newInstance) => {
+    const oldInstanceIndex = findInstanceIndex(
+      mergedInstances,
+      newInstance.key
+    );
+    if (oldInstanceIndex !== -1) {
+      mergedInstances[oldInstanceIndex] = newInstance;
+    } else {
+      mergedInstances.push(newInstance);
+    }
+  });
+  return mergedInstances;
+};
+
+export const mergeEnvVarDicts = (
+  oldDict: EnvVarDict,
+  newDict: EnvVarDict
+): EnvVarDict => {
+  const merged: EnvVarDict = clone(oldDict);
+  Object.entries(newDict).forEach(
+    ([newEnvVar, newData]: [string, EnvVarData]) => {
+      if (newEnvVar in merged) {
+        const mergedInstances = mergeInstances(
+          merged[newEnvVar].instances,
+          newData.instances
+        );
+        merged[newEnvVar] = {
+          ...merged[newEnvVar],
+          default: newData.default,
+          instances: mergedInstances,
+        };
+      } else {
+        merged[newEnvVar] = newData;
+      }
+    }
+  );
+  return merged;
+};

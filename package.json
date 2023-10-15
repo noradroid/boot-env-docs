@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "node": "node dist/index.js -m parseproperty -f application.yml -j records.json -o document.md",
+    "node": "node dist/index.js p samples/invalid-1.yaml test.json",
     "build-run": "npm run build && npm run node",
-    "nodemon": "nodemon src/index.ts -m parseproperty -f test.yaml -j records.json -o document.md",
+    "nodemon": "nodemon src/index.ts pg samples/valid-multi.yaml test.json test.md",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -19,9 +19,11 @@
   "license": "MIT",
   "dependencies": {
     "@scdev/declarative-markdown": "^1.3.2",
+    "lodash": "^4.17.21",
     "yaml": "^2.3.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.199",
     "jsdoc": "^4.0.2",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
