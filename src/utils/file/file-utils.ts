@@ -9,8 +9,12 @@ import {
 } from "./constants/file-extensions";
 import { FileType } from "./types/file.type";
 
+export const isFileExist = (fileName: string): boolean => {
+  return fs.existsSync(fileName);
+};
+
 const validateFileExists = (fileName: string): void => {
-  if (!fs.existsSync(fileName)) {
+  if (!isFileExist(fileName)) {
     throw new Error(`${fileName} does not exist`);
   }
 };

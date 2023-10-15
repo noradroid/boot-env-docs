@@ -1,30 +1,30 @@
 #!/usr/bin/env node
 
-import { readFile, writeFile } from "./utils/file/file-utils";
-import { generateMdFromJson } from "./md-generator/md-generator";
-import parseInputFileIntoKeyValuePairs from "./input-parser/main";
+import { parseArgs } from "./arg-parser/arg-parser";
+import { Command } from "./arg-parser/types/command.type";
 import parseKeyValuePairsIntoEnvVarDict, {
   mergeEnvVarDicts,
 } from "./env-var-parser/main";
-import { parseArgs } from "./arg-parser/arg-parser";
-import { Command } from "./arg-parser/types/command.type";
 import { EnvVarDict } from "./env-var-parser/types/env-var-data.type";
+import parseInputFileIntoKeyValuePairs from "./input-parser/main";
+import { generateMdFromJson } from "./md-generator/md-generator";
+import { writeFile, isFileExist, readFile } from "./utils/file/file-utils";
+import { isObjsEqual } from "./utils/misc/helper-utils";
 
-const skipDictMergeIfJsonFileNotExist = (
-  jsonFileName: string,
-  dictToMerge: EnvVarDict
-): EnvVarDict => {
-  // Skip if json file does not exist
-  try {
-    const ogDict = JSON.parse(readFile(jsonFileName));
+const writeJsonFile = (jsonFileName: string, envVarDict: EnvVarDict): void => {
+  console.log(JSON.stringify(envVarDict, undefined, 2));
 
-    return mergeEnvVarDicts(ogDict, dictToMerge);
-  } catch (err) {
-    console.log(
-      `Json file ${jsonFileName} does not exist, will be creating it...`
-    );
-    return dictToMerge;
-  }
+  writeFile(jsonFileName, JSON.stringify(envVarDict, undefined, 2));
+
+  console.log("Json file has been created/updated");
+};
+
+const writeMdFile = (mdFileName: string, envVarDict: EnvVarDict): void => {
+  const doc = generateMdFromJson(envVarDict);
+
+  writeFile(mdFileName, doc);
+
+  console.log("Md file has been created");
 };
 
 const main = () => {
@@ -40,14 +40,28 @@ const main = () => {
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
-    variablesDict = skipDictMergeIfJsonFileNotExist(
-      jsonFileName,
-      variablesDict
-    );
+    if (isFileExist(jsonFileName)) {
+      const ogDict = JSON.parse(readFile(jsonFileName));
 
-    console.log(JSON.stringify(variablesDict, undefined, 2));
+      variablesDict = mergeEnvVarDicts(ogDict, variablesDict);
 
-    writeFile(jsonFileName, JSON.stringify(variablesDict, undefined, 2));
+      if (isObjsEqual(ogDict, variablesDict)) {
+        console.log(
+          "Environment variables have not changed - json file will not be updated."
+        );
+      } else {
+        console.log(
+          "Environment variables have changed - proceeding to update json file."
+        );
+
+        writeJsonFile(jsonFileName, variablesDict);
+      }
+    } else {
+      console.log(
+        `Json file ${jsonFileName} does not exist, will be creating it...`
+      );
+      writeJsonFile(jsonFileName, variablesDict);
+    }
   } else if (fileArgs.command === Command.GEN) {
     const jsonFileName = fileArgs.jsonFile;
     const mdFileName = fileArgs.mdFile;
@@ -56,9 +70,7 @@ const main = () => {
 
     console.log(JSON.stringify(variablesDict, undefined, 2));
 
-    const doc = generateMdFromJson(variablesDict);
-
-    writeFile(mdFileName, doc);
+    writeMdFile(mdFileName, variablesDict);
   } else {
     const inputFileName = fileArgs.configFile;
     const jsonFileName = fileArgs.jsonFile;
@@ -68,18 +80,30 @@ const main = () => {
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
-    variablesDict = skipDictMergeIfJsonFileNotExist(
-      jsonFileName,
-      variablesDict
-    );
+    if (isFileExist(jsonFileName)) {
+      const ogDict = JSON.parse(readFile(jsonFileName));
 
-    console.log(JSON.stringify(variablesDict, undefined, 2));
+      variablesDict = mergeEnvVarDicts(ogDict, variablesDict);
 
-    writeFile(jsonFileName, JSON.stringify(variablesDict, undefined, 2));
+      if (isObjsEqual(ogDict, variablesDict)) {
+        console.log(
+          "Environment variables have not changed - json file will not be updated."
+        );
+      } else {
+        console.log(
+          "Environment variables have changed - proceeding to update json file."
+        );
 
-    const doc = generateMdFromJson(variablesDict);
+        writeJsonFile(jsonFileName, variablesDict);
+      }
+    } else {
+      console.log(
+        `Json file ${jsonFileName} does not exist, will be creating it...`
+      );
+      writeJsonFile(jsonFileName, variablesDict);
+    }
 
-    writeFile(mdFileName, doc);
+    writeMdFile(mdFileName, variablesDict);
   }
 };
 

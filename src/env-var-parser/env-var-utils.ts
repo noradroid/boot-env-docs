@@ -1,4 +1,5 @@
 import { ENV_VAR_OPENING_BRACE } from "./constants/tokens";
+import { EnvVarInstance } from "./types/env-var-data.type";
 import { Tokens } from "./types/tokens.type";
 
 /**
@@ -22,4 +23,20 @@ export const getEnvVarEndIndex = (
 ): number => {
   const nextStartIndex = getEnvVarStartIndex(tokens, startIndex + 1);
   return nextStartIndex === -1 ? tokens.length - 1 : nextStartIndex - 1;
+};
+
+export const findInstanceIndex = (
+  arr: EnvVarInstance[],
+  key: string
+): number => {
+  return arr.findIndex((ins) => ins.key === key);
+};
+
+export const isInstanceInArr = (
+  arr: EnvVarInstance[],
+  instance: EnvVarInstance
+): boolean => {
+  return !!arr.find(
+    (ins) => ins.key === instance.key && ins.default === instance.default
+  );
 };
