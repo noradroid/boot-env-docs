@@ -1,5 +1,5 @@
 {
-  "name": "boot-env-docs",
+  "name": "spring-env-docs",
   "version": "0.0.1",
   "description": "This package aims to help you generate documentation for Spring Boot environment variables.",
   "main": "src/index.ts",
@@ -11,12 +11,23 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "boot-env-docs": "./dist/index.js"
+    "spring-env-docs": "./dist/index.js"
   },
-  "repository": "https://github.com/noradroid/spring-boot-env-var-docs",
-  "homepage": "https://github.com/noradroid/spring-boot-env-var-docs#readme",
+  "repository": "https://github.com/noradroid/spring-env-docs",
+  "homepage": "https://github.com/noradroid/spring-env-docs#readme",
   "author": "noradroid",
   "license": "MIT",
+  "keywords": [
+    "spring",
+    "docs",
+    "documentation",
+    "docs-generator",
+    "docs-as-code",
+    "spring",
+    "environment variables",
+    "cli",
+    "markdown"
+  ],
   "dependencies": {
     "@scdev/declarative-markdown": "^1.3.2",
     "lodash": "^4.17.21",
