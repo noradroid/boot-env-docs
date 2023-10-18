@@ -1,0 +1,8 @@
+.github
+.vscode
+output
+samples
+src
+.gitignore
+.npmignore
+tsconfig.json
