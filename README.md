@@ -2,6 +2,19 @@
 
 The aim of this project is to identify environment variables from a Spring Boot property file, and generate a Markdown template documentation for these environment variables.
 
+- [What are Spring Boot environment variables?](#what-are-spring-boot-environment-variables)
+- [Defining valid environment variables syntax](#defining-valid-environment-variables-syntax)
+    - [Valid](#valid)
+    - [Invalid](#invalid)
+- [Run](#run)
+  - [Get environment variables from yaml file and generate markdown file](#get-environment-variables-from-yaml-file-and-generate-markdown-file)
+  - [Get environment variables from properties file](#get-environment-variables-from-properties-file)
+  - [Generate markdown file from edited output.json](#generate-markdown-file-from-edited-outputjson)
+  - [Get environment variables from yaml file and append to json file](#get-environment-variables-from-yaml-file-and-append-to-json-file)
+- [Test](#test)
+- [Notes](#notes)
+
+
 ## What are Spring Boot environment variables?
 
 In Spring Boot, configuration can be **externalised** from Java code using `application.yaml` or `application.properties` files found in `src/main/resources/`.
@@ -131,3 +144,10 @@ sedocs p application.yaml output.json -a
 ## Test
 
 Same as Run but do `npm run build` then replace the command with `node dist/index.js`.
+
+Debug using nodemon command.
+
+## Notes
+
+- To not flag file configuration such as `${application.name}` with no default value as an error, and exclude such configs from environment variables.
+- 
