@@ -1,22 +1,8 @@
 {
   "name": "spring-env-docs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This package aims to help you generate documentation for Spring Boot environment variables.",
   "main": "src/index.ts",
-  "scripts": {
-    "build": "tsc",
-    "node": "node dist/index.js p samples/invalid-1.yaml test.json",
-    "build-run": "npm run build && npm run node",
-    "nodemon": "nodemon src/index.ts pg samples/valid-multi.yaml test.json test.md",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "spring-env-docs": "./dist/index.js"
-  },
-  "repository": "https://github.com/noradroid/spring-env-docs",
-  "homepage": "https://github.com/noradroid/spring-env-docs#readme",
-  "author": "noradroid",
-  "license": "MIT",
   "keywords": [
     "spring",
     "docs",
@@ -28,6 +14,20 @@
     "cli",
     "markdown"
   ],
+  "repository": "https://github.com/noradroid/spring-env-docs",
+  "homepage": "https://github.com/noradroid/spring-env-docs#readme",
+  "author": "noradroid",
+  "license": "MIT",
+  "bin": {
+    "spring-env-docs": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "node": "node dist/index.js p samples/invalid-1.yaml test.json",
+    "build-run": "npm run build && npm run node",
+    "nodemon": "nodemon src/index.ts pg samples/valid-multi.yaml test.json test.md",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "@scdev/declarative-markdown": "^1.3.2",
     "lodash": "^4.17.21",

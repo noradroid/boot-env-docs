@@ -121,9 +121,8 @@ This provide ability to add more information to each variable (description, type
 #### Get environment variables from yaml file and append to json file
 
 ```
-node dist/index.js p application.yaml output.json output.md
+node dist/index.js p application.yaml output.json -a
 ```
 
 - parse from application.yaml file
 - append environment variables to output.json if existing
-- generate markdown file output.md based on output.json
