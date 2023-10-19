@@ -5,6 +5,7 @@ import {
   ENV_VAR_OPENING_BRACE,
   OPENING_CURLY_BRACE,
 } from "./constants/tokens";
+import { isWordFileVariable } from "./env-var-utils";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
 import { Tokens } from "./types/tokens.type";
 
@@ -12,6 +13,7 @@ export const validateEnvVarSyntax = (tokens: Tokens): void => {
   let openedBracketsCount = 0;
 
   let prevToken: string | null = null;
+  let prevWordOrToken: string | null = null;
 
   tokens.forEach((currToken: string) => {
     if (prevToken === null) {
@@ -23,7 +25,12 @@ export const validateEnvVarSyntax = (tokens: Tokens): void => {
       if (currToken === COLON_SEPARATOR) {
         prevToken = currToken;
       } else if (currToken === ENV_VAR_CLOSING_BRACE) {
-        throw new EnvVarParseError("MISSING_COLON");
+        if (isWordFileVariable(prevWordOrToken!)) {
+          openedBracketsCount -= 1;
+          prevToken = null;
+        } else {
+          throw new EnvVarParseError("MISSING_COLON");
+        }
       } else if (
         currToken === ENV_VAR_OPENING_BRACE ||
         currToken === OPENING_CURLY_BRACE
@@ -62,6 +69,7 @@ export const validateEnvVarSyntax = (tokens: Tokens): void => {
     } else {
       throw new EnvVarParseError("IDK_WHAT_HAPPENED");
     }
+    prevWordOrToken = currToken;
   });
 
   if (prevToken !== null) {

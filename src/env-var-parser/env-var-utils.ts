@@ -1,4 +1,4 @@
-import { ENV_VAR_OPENING_BRACE } from "./constants/tokens";
+import { DOT_SEPARATOR, ENV_VAR_OPENING_BRACE } from "./constants/tokens";
 import { EnvVarInstance } from "./types/env-var-data.type";
 import { Tokens } from "./types/tokens.type";
 
@@ -30,4 +30,8 @@ export const findInstanceIndex = (
   key: string
 ): number => {
   return arr.findIndex((ins) => ins.key === key);
+};
+
+export const isWordFileVariable = (word: string): boolean => {
+  return word.includes(DOT_SEPARATOR);
 };

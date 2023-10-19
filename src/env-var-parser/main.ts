@@ -18,6 +18,10 @@ import {
 } from "./types/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
+/**
+ * Tokenise config value, validate then parse into EnvVarDefault object(s).
+ * @param value - e.g. ${ENV_VAR:somevalue}
+ */
 const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
   const valueTokens = tokenise(value);
   if (valueTokens.length === 0) {
