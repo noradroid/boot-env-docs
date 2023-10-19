@@ -2,7 +2,7 @@
 
 The aim of this project is to identify environment variables from a Spring Boot property file, and generate a Markdown template documentation for these environment variables.
 
-### What are Spring Boot environment variables?
+## What are Spring Boot environment variables?
 
 In Spring Boot, configuration can be **externalised** from Java code using `application.yaml` or `application.properties` files found in `src/main/resources/`.
 
@@ -43,9 +43,9 @@ Now we can define an environment variable called `MICROSERVICE_ENDPOINT` and its
 
 > To set an environment variable you can do (Windows) Open command prompt and enter `set MICROSERVICE_ENDPOINT=https://api.dev/api/v1/users` or (Unix) Open terminal and enter `MICROSERVICE_ENDPOINT=https://api.dev/api/v1/users`.
 
-### Defining valid environment variables syntax
+## Defining valid environment variables syntax
 
-##### Valid
+#### Valid
 
 **Standard, with default value**
 ```yaml
@@ -64,7 +64,7 @@ property: ${PROPERTY:}
 ```
 > value of property will just default to an empty string ""
 
-##### Invalid
+#### Invalid
 
 **Space character after colon**
 ```yaml
@@ -86,43 +86,48 @@ property: ${PROPERTY:property A
 ```
 > Spring Boot will not recognise PROPERTY as an environment variable, and will treat the entire string "${PROPERTY:property A" as the value for `property`
 
-### Run
+## Run
 
-Replace the script for "node" in `package.json` with one of the following. Then run `npm run build-run`.
+**Install**: `npm i spring-env-docs`
 
-#### Get environment variables from yaml file and generate markdown file
+### Get environment variables from yaml file and generate markdown file
 
 ```
-node dist/index.js pg application.yaml output.json output.md
+sedocs pg application.yaml output.json output.md
 ```
 
 - parse from application.yaml file
 - store environment variables in output.json
 - generate markdown file output.md based on output.json
 
-#### Get environment variables from properties file
+### Get environment variables from properties file
 
 ```
-node dist/index.js pg application.properties output.json output.md
+sedocs pg application.properties output.json output.md
 ```
 
 - same as yaml version
 
-#### Generate markdown file from edited output.json
+### Generate markdown file from edited output.json
 
 ```
-node dist/index.js g output.json output.md
+sedocs g output.json output.md
 ```
 
 - generate markdown file output.md based on output.json
 
-This provide ability to add more information to each variable (description, type) to print in documentation
+You can add more information (description, type) in the json file before generating the markdown documentation.
 
-#### Get environment variables from yaml file and append to json file
+### Get environment variables from yaml file and append to json file
 
 ```
-node dist/index.js p application.yaml output.json -a
+sedocs p application.yaml output.json -a
 ```
 
 - parse from application.yaml file
 - append environment variables to output.json if existing
+
+
+## Test
+
+Same as Run but do `npm run build` then replace the command with `node dist/index.js`.
