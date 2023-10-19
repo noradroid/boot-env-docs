@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findInstanceIndex = exports.getEnvVarEndIndex = exports.getEnvVarStartIndex = void 0;
+exports.isWordFileVariable = exports.findInstanceIndex = exports.getEnvVarEndIndex = exports.getEnvVarStartIndex = void 0;
 const tokens_1 = require("./constants/tokens");
 /**
  * Get env var opening brace index from start index.
@@ -23,3 +23,7 @@ const findInstanceIndex = (arr, key) => {
     return arr.findIndex((ins) => ins.key === key);
 };
 exports.findInstanceIndex = findInstanceIndex;
+const isWordFileVariable = (word) => {
+    return word.includes(tokens_1.DOT_SEPARATOR);
+};
+exports.isWordFileVariable = isWordFileVariable;

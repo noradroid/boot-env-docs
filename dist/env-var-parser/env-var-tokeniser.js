@@ -38,6 +38,13 @@ const isTokenValidGivenPrevToken = (currToken, prevTokens) => {
     const prevToken = prevTokens[prevTokens.length - 1];
     return validPrevTokens.some((t) => prevToken === t);
 };
+/**
+ * Tokenises a config value into multiple semantic tokens.
+ * E.g. ${ABC_TOKEN:this is the value} would be tokenised into "${",
+ * "ABC_TOKEN", ":", "this is the value", "}".
+ * @param content
+ * @returns
+ */
 const tokenise = (content) => {
     const tokens = [];
     let currIndex = 0;

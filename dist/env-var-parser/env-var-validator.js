@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateEnvVarSyntax = void 0;
 const tokens_1 = require("./constants/tokens");
+const env_var_utils_1 = require("./env-var-utils");
 const env_var_parse_error_1 = require("./errors/env-var-parse.error");
 const validateEnvVarSyntax = (tokens) => {
     let openedBracketsCount = 0;
     let prevToken = null;
+    let prevWordOrToken = null;
     tokens.forEach((currToken) => {
         if (prevToken === null) {
             if (currToken === tokens_1.ENV_VAR_OPENING_BRACE) {
@@ -18,7 +20,13 @@ const validateEnvVarSyntax = (tokens) => {
                 prevToken = currToken;
             }
             else if (currToken === tokens_1.ENV_VAR_CLOSING_BRACE) {
-                throw new env_var_parse_error_1.EnvVarParseError("MISSING_COLON");
+                if ((0, env_var_utils_1.isWordFileVariable)(prevWordOrToken)) {
+                    openedBracketsCount -= 1;
+                    prevToken = null;
+                }
+                else {
+                    throw new env_var_parse_error_1.EnvVarParseError("MISSING_COLON");
+                }
             }
             else if (currToken === tokens_1.ENV_VAR_OPENING_BRACE ||
                 currToken === tokens_1.OPENING_CURLY_BRACE) {
@@ -64,6 +72,7 @@ const validateEnvVarSyntax = (tokens) => {
         else {
             throw new env_var_parse_error_1.EnvVarParseError("IDK_WHAT_HAPPENED");
         }
+        prevWordOrToken = currToken;
     });
     if (prevToken !== null) {
         throw new env_var_parse_error_1.EnvVarParseError("MISSING_CLOSING_BRACE");

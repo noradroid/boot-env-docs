@@ -9,6 +9,10 @@ const env_var_utils_1 = require("./env-var-utils");
 const env_var_validator_1 = require("./env-var-validator");
 const env_var_value_type_parser_1 = require("./env-var-value-type/env-var-value-type-parser");
 const env_var_parse_error_1 = require("./errors/env-var-parse.error");
+/**
+ * Tokenise config value, validate then parse into EnvVarDefault object(s).
+ * @param value - e.g. ${ENV_VAR:somevalue}
+ */
 const getEnvVarDefaults = (value) => {
     const valueTokens = (0, env_var_tokeniser_1.tokenise)(value);
     if (valueTokens.length === 0) {
