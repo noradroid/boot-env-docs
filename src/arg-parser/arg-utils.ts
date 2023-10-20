@@ -39,15 +39,15 @@ export const getFileNames = (args: string[], append: boolean): string[] => {
 
 // command arg
 
-export const isParseCmd = (arg: string): boolean => {
+const isParseCmd = (arg: string): boolean => {
   return arg === PARSE_CMD || arg === PARSE_CMD_SH;
 };
 
-export const isGenCmd = (arg: string): boolean => {
+const isGenCmd = (arg: string): boolean => {
   return arg === GEN_CMD || arg === GEN_CMD_SH;
 };
 
-export const isParseGenCmd = (arg: string): boolean => {
+const isParseGenCmd = (arg: string): boolean => {
   return arg === PARSE_GEN_CMD || arg === PARSE_GEN_CMD_SH;
 };
 
@@ -73,34 +73,34 @@ export const getAppendFlag = (args: string[]): boolean => {
 
 // file args
 
-export const isConfigFileArg = (arg: string): boolean => {
+const isConfigFileArg = (arg: string): boolean => {
   const fileType = getFileType(arg);
   return fileType === FileType.YAML || fileType === FileType.PROPERTIES;
 };
 
-export const isJsonFileArg = (arg: string): boolean => {
+const isJsonFileArg = (arg: string): boolean => {
   const fileType = getFileType(arg);
   return fileType === FileType.JSON;
 };
 
-export const isMdFileArg = (arg: string): boolean => {
+const isMdFileArg = (arg: string): boolean => {
   const fileType = getFileType(arg);
   return fileType === FileType.MD;
 };
 
-export const validateParseArgs = (fileNames: string[]) => {
+const validateParseArgs = (fileNames: string[]) => {
   if (!(isConfigFileArg(fileNames[0]) && isJsonFileArg(fileNames[1]))) {
     throw new Error("Invalid parse args");
   }
 };
 
-export const validateGenArgs = (fileNames: string[]) => {
+const validateGenArgs = (fileNames: string[]) => {
   if (!(isJsonFileArg(fileNames[0]) && isMdFileArg(fileNames[1]))) {
     throw new Error("Invalid gen args");
   }
 };
 
-export const validateParseGenArgs = (fileNames: string[]) => {
+const validateParseGenArgs = (fileNames: string[]) => {
   if (
     !(
       isConfigFileArg(fileNames[0]) &&
@@ -112,18 +112,7 @@ export const validateParseGenArgs = (fileNames: string[]) => {
   }
 };
 
-export const validateFileNames = (command: Command, fileNames: string[]) => {
-  if (command === Command.PARSE) {
-    validateParseArgs(fileNames);
-  } else if (command === Command.GEN) {
-    validateGenArgs(fileNames);
-  } else {
-    // PARSE_GEN
-    validateParseGenArgs(fileNames);
-  }
-};
-
-export const getParseFileArgs = (
+const getParseFileArgs = (
   fileNames: string[],
   append: boolean
 ): ParseFileArgs => {
@@ -135,7 +124,7 @@ export const getParseFileArgs = (
   };
 };
 
-export const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
+const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
   return {
     command: Command.GEN,
     jsonFile: fileNames[0],
@@ -143,7 +132,7 @@ export const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
   };
 };
 
-export const getParseGenFileArgs = (
+const getParseGenFileArgs = (
   fileNames: string[],
   append: boolean
 ): ParseGenFileArgs => {
@@ -162,10 +151,14 @@ export const getFileArgs = (
   append: boolean
 ): FileArgs => {
   if (command === Command.PARSE) {
+    validateParseArgs(fileNames);
     return getParseFileArgs(fileNames, append);
   } else if (command === Command.GEN) {
+    validateGenArgs(fileNames);
     return getGenFileArgs(fileNames);
   } else {
+    // PARSE_GEN
+    validateParseGenArgs(fileNames);
     return getParseGenFileArgs(fileNames, append);
   }
 };
