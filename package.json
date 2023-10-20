@@ -1,6 +1,6 @@
 {
   "name": "spring-env-docs",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "This package aims to help you generate documentation for Spring Boot environment variables.",
   "main": "src/index.ts",
   "keywords": [
