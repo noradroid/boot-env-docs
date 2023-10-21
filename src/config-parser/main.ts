@@ -1,4 +1,7 @@
+import { YAMLParseError } from "yaml";
+import { formatParseError } from "../utils/error/error-utils";
 import { readFile } from "../utils/file/file-utils";
+import { PropertiesParseError } from "./properties/errors/properties-parse.error";
 import { parseDotProperties } from "./properties/properties-parser";
 import { validateDotProperties } from "./properties/properties-validator";
 import { FileType } from "./shared/types/file.type";
@@ -13,16 +16,33 @@ const main = (fileName: string) => {
   const contents: string = readFile(fileName);
 
   if (fileType === FileType.YAML) {
-    const valid = validateDotYaml(contents);
-    if (!valid) {
+    try {
+      validateDotYaml(contents);
+    } catch (err) {
+      if (err instanceof YAMLParseError) {
+        console.error(formatParseError(err) + ` - ${err.message}`);
+        // YAMLParseError - caused by BLOCK_AS_IMPLICIT_KEY
+        // Nested mappings are not allowed in compact mappings
+      } else {
+        console.error(err);
+      }
+
       console.error("Invalid yaml file. Program terminating...");
       process.exit(1);
     }
     const keyValuePairs: KeyValuePairs = parseDotYaml(contents);
     return keyValuePairs;
   } else {
-    const valid = validateDotProperties(contents);
-    if (!valid) {
+    try {
+      validateDotProperties(contents);
+    } catch (err) {
+      if (err instanceof PropertiesParseError) {
+        console.error(formatParseError(err) + ` - ${err.message}`);
+        // PropertiesParseError - caused by MISSING_VALUE_ASSIGN
+        // Property is not assigned a value
+      } else {
+        console.error(err);
+      }
       console.error("Invalid properties file. Program terminating...");
       process.exit(1);
     }

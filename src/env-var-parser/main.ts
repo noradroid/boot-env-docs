@@ -3,14 +3,15 @@ import { formatParseError } from "../utils/error/error-utils";
 import { clone, isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";
-import { findInstanceIndex } from "./env-var-utils";
+import { findInstanceIndex, getUpdatedEnvVarData } from "./env-var-utils";
 import { validateEnvVarSyntax } from "./env-var-validator";
 import {
   convertValueIntoType,
   getValueType,
 } from "./env-var-value-type/env-var-value-type-parser";
+import { ValueType } from "./env-var-value-type/types/value-type.type";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
-import { Default } from "./types/default.type";
+import { DefaultValue } from "./types/default-value.type";
 import {
   EnvVarData,
   EnvVarDict,
@@ -27,21 +28,9 @@ const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
   if (valueTokens.length === 0) {
     return [];
   }
-  try {
-    validateEnvVarSyntax(valueTokens);
-    const envVarDefaults = parseTokensIntoEnvVarDefaults(valueTokens);
-    return envVarDefaults;
-  } catch (err) {
-    // EnvVarParseError
-    if (err instanceof EnvVarParseError) {
-      console.error(formatParseError(err));
-      // EnvVarParseError - caused by MISSING_CLOSING_BRACE
-      // = Env var is not closed by a closing brace
-    } else {
-      console.error(err);
-    }
-    process.exit(1);
-  }
+  validateEnvVarSyntax(valueTokens);
+  const envVarDefaults = parseTokensIntoEnvVarDefaults(valueTokens);
+  return envVarDefaults;
 };
 
 const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
@@ -49,29 +38,32 @@ const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
   // tokenize each value
   keyValuePairs.forEach((keyValue) => {
     if (isString(keyValue.value)) {
-      const envVarDefaults = getEnvVarDefaults(keyValue.value);
-      envVarDefaults.forEach((envVarDefault) => {
-        const valueType = getValueType(envVarDefault.default);
-        const defaultValue: Default = convertValueIntoType(
-          envVarDefault.default,
-          valueType
-        );
-        if (!(envVarDefault.envVar in variables)) {
-          variables[envVarDefault.envVar] = {
-            envVar: envVarDefault.envVar,
-            description: "",
-            type: valueType,
-            default: defaultValue,
-            instances: [],
-          };
-        }
-        variables[envVarDefault.envVar].type = valueType;
-        variables[envVarDefault.envVar].default = defaultValue;
-        variables[envVarDefault.envVar].instances.push({
-          key: keyValue.key,
-          default: defaultValue,
+      try {
+        const envVarDefaults = getEnvVarDefaults(keyValue.value);
+        envVarDefaults.forEach((envVarDefault) => {
+          const valueType: ValueType = getValueType(envVarDefault.default);
+          const defaultValue: DefaultValue = convertValueIntoType(
+            envVarDefault.default,
+            valueType
+          );
+          variables[envVarDefault.envVar] = getUpdatedEnvVarData(
+            variables,
+            keyValue.key,
+            envVarDefault.envVar,
+            valueType,
+            defaultValue
+          );
         });
-      });
+      } catch (err) {
+        if (err instanceof EnvVarParseError) {
+          console.error(formatParseError(err) + ` for config ${keyValue.key}`);
+          // EnvVarParseError - caused by MISSING_CLOSING_BRACE
+          // Env var is not closed by a closing brace
+        } else {
+          console.error(err);
+        }
+        process.exit(1);
+      }
     }
   });
   return variables;

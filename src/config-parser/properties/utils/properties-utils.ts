@@ -19,11 +19,9 @@ const isNotComment = (line: string): boolean => {
   return !line.startsWith(COMMENT_CHARACTER);
 };
 
-export const isLineValid = (line: string): boolean => {
+export const isLineValid = (line: string): void => {
   if (!line.includes(EQUAL_SEPARATOR)) {
     throw new PropertiesParseError(line);
-  } else {
-    return true;
   }
 };
 

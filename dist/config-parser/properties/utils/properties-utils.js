@@ -16,9 +16,6 @@ const isLineValid = (line) => {
     if (!line.includes(tokens_1.EQUAL_SEPARATOR)) {
         throw new properties_parse_error_1.PropertiesParseError(line);
     }
-    else {
-        return true;
-    }
 };
 exports.isLineValid = isLineValid;
 const splitPropertiesIntoLines = (content) => {

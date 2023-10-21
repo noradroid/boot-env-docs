@@ -1,4 +1,4 @@
-import { Default } from "../types/default.type";
+import { DefaultValue } from "../types/default-value.type";
 import { ValueType } from "./types/value-type.type";
 
 const isEmpty = (value: string): boolean => {
@@ -42,7 +42,7 @@ const convertIntoBoolean = (value: string): boolean => {
 export const convertValueIntoType = (
   value: string,
   type: ValueType
-): Default => {
+): DefaultValue => {
   if (type === "unknown") {
     return null;
   } else if (type === "number") {

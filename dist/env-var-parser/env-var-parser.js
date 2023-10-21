@@ -30,7 +30,6 @@ const parseTokensIntoEnvVarDefaults = (tokens) => {
             envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex));
         }
         catch (err) {
-            // EnvVarParseError
             if (err instanceof non_env_var_config_error_1.NonEnvVarConfigError) {
                 console.log(`${err.name} - ${err.message}. Skipping...`);
                 // EnvVarParseError - caused by MISSING_CLOSING_BRACE
