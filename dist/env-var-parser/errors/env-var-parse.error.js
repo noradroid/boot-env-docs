@@ -5,7 +5,7 @@ class EnvVarParseError extends Error {
     constructor(code) {
         super();
         this.name = "EnvVarParseError";
-        this.code = "MISSING_VALUE_ASSIGN";
+        this.code = "IDK_WHAT_HAPPENED";
         this.code = code;
         if (code === "MISSING_CLOSING_BRACE") {
             this.message =

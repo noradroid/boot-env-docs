@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mergeEnvVarDicts = void 0;
-const error_utils_1 = require("../utils/error/error-utils");
+const error_utils_1 = require("../utils/errors/error-utils");
 const helper_utils_1 = require("../utils/misc/helper-utils");
 const env_var_parser_1 = require("./env-var-parser");
 const env_var_tokeniser_1 = require("./env-var-tokeniser");

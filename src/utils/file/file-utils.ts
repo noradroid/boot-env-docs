@@ -1,5 +1,6 @@
 import fs from "fs";
 
+import { formatParseError } from "../errors/error-utils";
 import {
   JSON_EXT,
   MD_EXT,
@@ -7,6 +8,8 @@ import {
   YAML_EXT,
   YML_EXT,
 } from "./constants/file-extensions";
+import { FileNonExistentError } from "./errors/file-non-existent.error";
+import { FileTypeError } from "./errors/file-type.error";
 import { FileType } from "./types/file.type";
 
 export const isFileExist = (fileName: string): boolean => {
@@ -15,16 +18,27 @@ export const isFileExist = (fileName: string): boolean => {
 
 const validateFileExists = (fileName: string): void => {
   if (!isFileExist(fileName)) {
-    throw new Error(`${fileName} does not exist`);
+    throw new FileNonExistentError(fileName);
   }
 };
 
 export const readFile = (fileName: string): string => {
-  validateFileExists(fileName);
-  console.log(`${fileName} exists`);
+  try {
+    validateFileExists(fileName);
+    console.log(`${fileName} exists`);
 
-  const file = fs.readFileSync(fileName, "utf8");
-  return file;
+    const file = fs.readFileSync(fileName, "utf8");
+    return file;
+  } catch (err) {
+    if (err instanceof FileNonExistentError) {
+      console.error(formatParseError(err) + ` - ${err.message}`);
+      // FileNonExistentError - caused by FILE_NON_EXISTENT
+      // File does not exist.
+    } else {
+      console.error(err);
+    }
+    process.exit(1);
+  }
 };
 
 export const writeFile = (fileName: string, contents: string): void => {
@@ -65,6 +79,11 @@ export const getFileType = (fileName: string): FileType => {
   } else if (isMdFile(fileName)) {
     return FileType.MD;
   } else {
-    throw new Error("Invalid file type!");
+    throw new FileTypeError(fileName, [
+      FileType.YAML,
+      FileType.PROPERTIES,
+      FileType.JSON,
+      FileType.MD,
+    ]);
   }
 };

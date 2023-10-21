@@ -1,5 +1,5 @@
 import { KeyValuePairs } from "../config-parser/shared/types/key-value.type";
-import { formatParseError } from "../utils/error/error-utils";
+import { formatParseError } from "../utils/errors/error-utils";
 import { clone, isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";

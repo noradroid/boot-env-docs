@@ -48,10 +48,11 @@ const main = () => {
     const fileArgs = (0, arg_parser_1.parseArgs)();
     let variablesDict = {};
     if (fileArgs.command === command_type_1.Command.PARSE) {
-        const inputFileName = fileArgs.configFile;
+        const configFileName = fileArgs.configFile;
+        const configFileType = fileArgs.configFileType;
         const jsonFileName = fileArgs.jsonFile;
         const append = fileArgs.append;
-        const keyValuePairs = (0, main_2.default)(inputFileName);
+        const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
@@ -77,11 +78,12 @@ const main = () => {
         writeMdFile(mdFileName, variablesDict);
     }
     else {
-        const inputFileName = fileArgs.configFile;
+        const configFileName = fileArgs.configFile;
+        const configFileType = fileArgs.configFileType;
         const jsonFileName = fileArgs.jsonFile;
         const mdFileName = fileArgs.mdFile;
         const append = fileArgs.append;
-        const keyValuePairs = (0, main_2.default)(inputFileName);
+        const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));

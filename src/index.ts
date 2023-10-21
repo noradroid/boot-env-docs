@@ -33,11 +33,15 @@ const main = () => {
   let variablesDict: any = {};
 
   if (fileArgs.command === Command.PARSE) {
-    const inputFileName = fileArgs.configFile;
+    const configFileName = fileArgs.configFile;
+    const configFileType = fileArgs.configFileType;
     const jsonFileName = fileArgs.jsonFile;
     const append = fileArgs.append;
 
-    const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
+    const keyValuePairs = parseInputFileIntoKeyValuePairs(
+      configFileName,
+      configFileType
+    );
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
@@ -73,12 +77,16 @@ const main = () => {
 
     writeMdFile(mdFileName, variablesDict);
   } else {
-    const inputFileName = fileArgs.configFile;
+    const configFileName = fileArgs.configFile;
+    const configFileType = fileArgs.configFileType;
     const jsonFileName = fileArgs.jsonFile;
     const mdFileName = fileArgs.mdFile;
     const append = fileArgs.append;
 
-    const keyValuePairs = parseInputFileIntoKeyValuePairs(inputFileName);
+    const keyValuePairs = parseInputFileIntoKeyValuePairs(
+      configFileName,
+      configFileType
+    );
 
     variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 

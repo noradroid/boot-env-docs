@@ -5,7 +5,7 @@ export type EnvVarParseErrorCode =
 
 export class EnvVarParseError extends Error {
   name = "EnvVarParseError";
-  code = "MISSING_VALUE_ASSIGN";
+  code: EnvVarParseErrorCode = "IDK_WHAT_HAPPENED";
   message: string;
 
   constructor(code: EnvVarParseErrorCode) {

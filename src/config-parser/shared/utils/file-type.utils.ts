@@ -1,3 +1,4 @@
+import { FileTypeError } from "../../../utils/file/errors/file-type.error";
 import {
   PROPERTIES_EXT,
   YAML_EXT,
@@ -12,6 +13,6 @@ export const getFileType = (fileName: string): FileType => {
   } else if (name.endsWith(PROPERTIES_EXT)) {
     return FileType.PROPERTIES;
   } else {
-    throw new Error("Invalid file type!");
+    throw new FileTypeError(fileName, [FileType.YAML, FileType.PROPERTIES]);
   }
 };

@@ -1,3 +1,4 @@
+import { FileType } from "../../config-parser/shared/types/file.type";
 import { Command } from "./command.type";
 
 export type FileArgs = ParseFileArgs | GenFileArgs | ParseGenFileArgs;
@@ -24,6 +25,7 @@ export type ParseGenFileArgs = {
 
 export type ConfigFile = {
   configFile: string;
+  configFileType: FileType;
 };
 
 export type JsonFile = {
