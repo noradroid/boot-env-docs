@@ -89,13 +89,25 @@ const isMdFileArg = (arg: string): boolean => {
 };
 
 const validateParseArgs = (fileNames: string[]) => {
-  if (!(isConfigFileArg(fileNames[0]) && isJsonFileArg(fileNames[1]))) {
+  if (
+    !(
+      fileNames.length === 2 &&
+      isConfigFileArg(fileNames[0]) &&
+      isJsonFileArg(fileNames[1])
+    )
+  ) {
     throw new Error("Invalid parse args");
   }
 };
 
 const validateGenArgs = (fileNames: string[]) => {
-  if (!(isJsonFileArg(fileNames[0]) && isMdFileArg(fileNames[1]))) {
+  if (
+    !(
+      fileNames.length === 2 &&
+      isJsonFileArg(fileNames[0]) &&
+      isMdFileArg(fileNames[1])
+    )
+  ) {
     throw new Error("Invalid gen args");
   }
 };
@@ -103,6 +115,7 @@ const validateGenArgs = (fileNames: string[]) => {
 const validateParseGenArgs = (fileNames: string[]) => {
   if (
     !(
+      fileNames.length === 3 &&
       isConfigFileArg(fileNames[0]) &&
       isJsonFileArg(fileNames[1]) &&
       isMdFileArg(fileNames[2])

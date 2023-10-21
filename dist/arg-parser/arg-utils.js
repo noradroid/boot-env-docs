@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFileArgs = exports.getParseGenFileArgs = exports.getGenFileArgs = exports.getParseFileArgs = exports.validateFileNames = exports.validateParseGenArgs = exports.validateGenArgs = exports.validateParseArgs = exports.isMdFileArg = exports.isJsonFileArg = exports.isConfigFileArg = exports.getAppendFlag = exports.getCommand = exports.isParseGenCmd = exports.isGenCmd = exports.isParseCmd = exports.getFileNames = exports.getArgs = exports.checkArgsProvided = void 0;
+exports.getFileArgs = exports.getAppendFlag = exports.getCommand = exports.getFileNames = exports.getArgs = exports.checkArgsProvided = void 0;
 const file_utils_1 = require("../utils/file/file-utils");
 const file_type_1 = require("../utils/file/types/file.type");
 const commands_1 = require("./constants/commands");
@@ -30,23 +30,20 @@ exports.getFileNames = getFileNames;
 const isParseCmd = (arg) => {
     return arg === commands_1.PARSE_CMD || arg === commands_1.PARSE_CMD_SH;
 };
-exports.isParseCmd = isParseCmd;
 const isGenCmd = (arg) => {
     return arg === commands_1.GEN_CMD || arg === commands_1.GEN_CMD_SH;
 };
-exports.isGenCmd = isGenCmd;
 const isParseGenCmd = (arg) => {
     return arg === commands_1.PARSE_GEN_CMD || arg === commands_1.PARSE_GEN_CMD_SH;
 };
-exports.isParseGenCmd = isParseGenCmd;
 const getCommand = (args) => {
-    if ((0, exports.isParseCmd)(args[0])) {
+    if (isParseCmd(args[0])) {
         return command_type_1.Command.PARSE;
     }
-    else if ((0, exports.isGenCmd)(args[0])) {
+    else if (isGenCmd(args[0])) {
         return command_type_1.Command.GEN;
     }
-    else if ((0, exports.isParseGenCmd)(args[0])) {
+    else if (isParseGenCmd(args[0])) {
         return command_type_1.Command.PARSE_GEN;
     }
     else {
@@ -66,50 +63,36 @@ const isConfigFileArg = (arg) => {
     const fileType = (0, file_utils_1.getFileType)(arg);
     return fileType === file_type_1.FileType.YAML || fileType === file_type_1.FileType.PROPERTIES;
 };
-exports.isConfigFileArg = isConfigFileArg;
 const isJsonFileArg = (arg) => {
     const fileType = (0, file_utils_1.getFileType)(arg);
     return fileType === file_type_1.FileType.JSON;
 };
-exports.isJsonFileArg = isJsonFileArg;
 const isMdFileArg = (arg) => {
     const fileType = (0, file_utils_1.getFileType)(arg);
     return fileType === file_type_1.FileType.MD;
 };
-exports.isMdFileArg = isMdFileArg;
 const validateParseArgs = (fileNames) => {
-    if (!((0, exports.isConfigFileArg)(fileNames[0]) && (0, exports.isJsonFileArg)(fileNames[1]))) {
+    if (!(fileNames.length === 2 &&
+        isConfigFileArg(fileNames[0]) &&
+        isJsonFileArg(fileNames[1]))) {
         throw new Error("Invalid parse args");
     }
 };
-exports.validateParseArgs = validateParseArgs;
 const validateGenArgs = (fileNames) => {
-    if (!((0, exports.isJsonFileArg)(fileNames[0]) && (0, exports.isMdFileArg)(fileNames[1]))) {
+    if (!(fileNames.length === 2 &&
+        isJsonFileArg(fileNames[0]) &&
+        isMdFileArg(fileNames[1]))) {
         throw new Error("Invalid gen args");
     }
 };
-exports.validateGenArgs = validateGenArgs;
 const validateParseGenArgs = (fileNames) => {
-    if (!((0, exports.isConfigFileArg)(fileNames[0]) &&
-        (0, exports.isJsonFileArg)(fileNames[1]) &&
-        (0, exports.isMdFileArg)(fileNames[2]))) {
+    if (!(fileNames.length === 3 &&
+        isConfigFileArg(fileNames[0]) &&
+        isJsonFileArg(fileNames[1]) &&
+        isMdFileArg(fileNames[2]))) {
         throw new Error("Invalid parsegen args");
     }
 };
-exports.validateParseGenArgs = validateParseGenArgs;
-const validateFileNames = (command, fileNames) => {
-    if (command === command_type_1.Command.PARSE) {
-        (0, exports.validateParseArgs)(fileNames);
-    }
-    else if (command === command_type_1.Command.GEN) {
-        (0, exports.validateGenArgs)(fileNames);
-    }
-    else {
-        // PARSE_GEN
-        (0, exports.validateParseGenArgs)(fileNames);
-    }
-};
-exports.validateFileNames = validateFileNames;
 const getParseFileArgs = (fileNames, append) => {
     return {
         command: command_type_1.Command.PARSE,
@@ -118,7 +101,6 @@ const getParseFileArgs = (fileNames, append) => {
         append,
     };
 };
-exports.getParseFileArgs = getParseFileArgs;
 const getGenFileArgs = (fileNames) => {
     return {
         command: command_type_1.Command.GEN,
@@ -126,7 +108,6 @@ const getGenFileArgs = (fileNames) => {
         mdFile: fileNames[1],
     };
 };
-exports.getGenFileArgs = getGenFileArgs;
 const getParseGenFileArgs = (fileNames, append) => {
     return {
         command: command_type_1.Command.PARSE_GEN,
@@ -136,16 +117,19 @@ const getParseGenFileArgs = (fileNames, append) => {
         append,
     };
 };
-exports.getParseGenFileArgs = getParseGenFileArgs;
 const getFileArgs = (command, fileNames, append) => {
     if (command === command_type_1.Command.PARSE) {
-        return (0, exports.getParseFileArgs)(fileNames, append);
+        validateParseArgs(fileNames);
+        return getParseFileArgs(fileNames, append);
     }
     else if (command === command_type_1.Command.GEN) {
-        return (0, exports.getGenFileArgs)(fileNames);
+        validateGenArgs(fileNames);
+        return getGenFileArgs(fileNames);
     }
     else {
-        return (0, exports.getParseGenFileArgs)(fileNames, append);
+        // PARSE_GEN
+        validateParseGenArgs(fileNames);
+        return getParseGenFileArgs(fileNames, append);
     }
 };
 exports.getFileArgs = getFileArgs;
