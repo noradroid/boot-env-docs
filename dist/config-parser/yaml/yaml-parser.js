@@ -6,7 +6,6 @@ const yaml_utils_1 = require("./utils/yaml-utils");
 const parseYaml = (content) => {
     const documents = (0, yaml_1.parseAllDocuments)(content);
     const keyValuePairs = documents.flatMap(yaml_utils_1.convertDocumentIntoKeyValuePairs);
-    console.log(keyValuePairs);
     return keyValuePairs;
 };
 const parseDotYaml = (content) => {
