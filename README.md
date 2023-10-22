@@ -12,7 +12,7 @@ The aim of this project is to identify environment variables from a Spring Boot 
   - [Generate markdown file from edited output.json](#generate-markdown-file-from-edited-outputjson)
   - [Get environment variables from yaml file and append to json file](#get-environment-variables-from-yaml-file-and-append-to-json-file)
 - [Test](#test)
-- [Notes](#notes)
+- [Enhancements](#enhancements)
 
 
 ## What are Spring Boot environment variables?
@@ -147,7 +147,7 @@ Same as Run but do `npm run build` then replace the command with `node dist/inde
 
 Debug using nodemon command.
 
-## Notes
+## Enhancements
 
 - To not flag file configuration such as `${application.name}` with no default value as an error, and exclude such configs from environment variables.
-- 
+- Update error messages
