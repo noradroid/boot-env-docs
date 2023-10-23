@@ -16,9 +16,12 @@ const parseTokensIntoEnvVarDefault = (tokens, startIndex, endIndex) => {
         const configName = tokens[startIndex + 1];
         throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
     }
-    const envVar = tokens[colonIndex - 1];
+    const configName = tokens[colonIndex - 1];
+    if (configName.includes(tokens_1.DOT_SEPARATOR)) {
+        throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
+    }
     const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");
-    return { envVar, default: defaultStr };
+    return { envVar: configName, default: defaultStr };
 };
 const parseTokensIntoEnvVarDefaults = (tokens) => {
     const envVarDefaults = [];

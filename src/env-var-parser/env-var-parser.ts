@@ -1,4 +1,4 @@
-import { COLON_SEPARATOR } from "./constants/tokens";
+import { COLON_SEPARATOR, DOT_SEPARATOR } from "./constants/tokens";
 import { getEnvVarStartIndex, getEnvVarEndIndex } from "./env-var-utils";
 import { NonEnvVarConfigError } from "./errors/non-env-var-config.error";
 import { EnvVarDefault } from "./types/env-var-default.type";
@@ -20,9 +20,12 @@ const parseTokensIntoEnvVarDefault = (
     const configName = tokens[startIndex + 1];
     throw new NonEnvVarConfigError(configName);
   }
-  const envVar = tokens[colonIndex - 1];
+  const configName = tokens[colonIndex - 1];
+  if (configName.includes(DOT_SEPARATOR)) {
+    throw new NonEnvVarConfigError(configName);
+  }
   const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");
-  return { envVar, default: defaultStr };
+  return { envVar: configName, default: defaultStr };
 };
 
 export const parseTokensIntoEnvVarDefaults = (
