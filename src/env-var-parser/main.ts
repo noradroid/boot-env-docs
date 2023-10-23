@@ -14,7 +14,7 @@ import { EnvVarParseError } from "./errors/env-var-parse.error";
 import { DefaultValue } from "./types/default-value.type";
 import {
   EnvVarData,
-  EnvVarDict,
+  EnvVarsDict,
   EnvVarInstance,
 } from "./types/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
@@ -33,8 +33,8 @@ const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
   return envVarDefaults;
 };
 
-const main = (keyValuePairs: KeyValuePairs): EnvVarDict => {
-  const variables: EnvVarDict = {};
+const main = (keyValuePairs: KeyValuePairs): EnvVarsDict => {
+  const variables: EnvVarsDict = {};
   // tokenize each value
   keyValuePairs.forEach((keyValue) => {
     if (isString(keyValue.value)) {
@@ -91,10 +91,10 @@ const mergeInstances = (
 };
 
 export const mergeEnvVarDicts = (
-  oldDict: EnvVarDict,
-  newDict: EnvVarDict
-): EnvVarDict => {
-  const merged: EnvVarDict = clone(oldDict);
+  oldDict: EnvVarsDict,
+  newDict: EnvVarsDict
+): EnvVarsDict => {
+  const merged: EnvVarsDict = clone(oldDict);
   Object.entries(newDict).forEach(
     ([newEnvVar, newData]: [string, EnvVarData]) => {
       if (newEnvVar in merged) {

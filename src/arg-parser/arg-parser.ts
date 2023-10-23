@@ -7,10 +7,12 @@ import {
   getCommand,
   getFileArgs,
   getFileNames,
+  getVersionArg,
 } from "./arg-utils";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
 import { FileArgs } from "./types/file-args.type";
+import { Version } from "../types/version.type";
 
 export const parseArgs = (): FileArgs => {
   try {
@@ -22,9 +24,11 @@ export const parseArgs = (): FileArgs => {
 
     const append: boolean = getAppendFlag(args);
 
-    const fileNames = getFileNames(args, append);
+    const version: Version | undefined = getVersionArg(args);
 
-    const fileArgs: FileArgs = getFileArgs(command, fileNames, append);
+    const fileNames = getFileNames(args, append, version !== null);
+
+    const fileArgs: FileArgs = getFileArgs(command, fileNames, append, version);
     return fileArgs;
   } catch (err) {
     if (err instanceof ArgParseError) {

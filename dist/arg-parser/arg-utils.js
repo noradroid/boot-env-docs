@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFileArgs = exports.getAppendFlag = exports.getCommand = exports.getFileNames = exports.getArgs = exports.checkArgsProvided = void 0;
+exports.getFileArgs = exports.getVersionArg = exports.getAppendFlag = exports.getCommand = exports.getFileNames = exports.getArgs = exports.checkArgsProvided = void 0;
 const file_utils_1 = require("../utils/file/file-utils");
 const file_type_1 = require("../utils/file/types/file.type");
 const commands_1 = require("./constants/commands");
@@ -17,11 +17,15 @@ const getArgs = () => {
     return process.argv.slice(2);
 };
 exports.getArgs = getArgs;
-const getFileNames = (args, append) => {
+const getFileNames = (args, append, hasVersion) => {
     const argsAfterCmd = args.slice(1);
     if (append) {
         const appendIndex = argsAfterCmd.findIndex((arg) => arg === flags_1.APPEND_FLAG);
         argsAfterCmd.splice(appendIndex, 1);
+    }
+    if (hasVersion) {
+        const versionIndex = argsAfterCmd.findIndex((arg) => arg === flags_1.VERSION_FLAG);
+        argsAfterCmd.splice(versionIndex, 2);
     }
     return argsAfterCmd;
 };
@@ -57,6 +61,20 @@ const getAppendFlag = (args) => {
     return !!append;
 };
 exports.getAppendFlag = getAppendFlag;
+// version flag
+const isLastIndex = (arr, index) => {
+    return index === arr.length - 1;
+};
+const getVersionArg = (args) => {
+    const versionFlagIndex = args.findIndex((a) => a === flags_1.VERSION_FLAG);
+    if (versionFlagIndex !== -1 && !isLastIndex(args, versionFlagIndex)) {
+        return args[versionFlagIndex + 1];
+    }
+    else {
+        return undefined;
+    }
+};
+exports.getVersionArg = getVersionArg;
 // file args
 const isConfigFileArg = (arg) => {
     const fileType = (0, file_utils_1.getFileType)(arg);
@@ -118,10 +136,10 @@ const getParseGenFileArgs = (fileNames, append) => {
         append,
     };
 };
-const getFileArgs = (command, fileNames, append) => {
+const getFileArgs = (command, fileNames, append, version) => {
     if (command === command_type_1.Command.PARSE) {
         validateParseArgs(fileNames);
-        return getParseFileArgs(fileNames, append);
+        return Object.assign(Object.assign({}, getParseFileArgs(fileNames, append)), { version: version });
     }
     else if (command === command_type_1.Command.GEN) {
         validateGenArgs(fileNames);
@@ -130,7 +148,7 @@ const getFileArgs = (command, fileNames, append) => {
     else {
         // PARSE_GEN
         validateParseGenArgs(fileNames);
-        return getParseGenFileArgs(fileNames, append);
+        return Object.assign(Object.assign({}, getParseGenFileArgs(fileNames, append)), { version: version });
     }
 };
 exports.getFileArgs = getFileArgs;

@@ -3,7 +3,7 @@ import { ValueType } from "./env-var-value-type/types/value-type.type";
 import { DefaultValue } from "./types/default-value.type";
 import {
   EnvVarData,
-  EnvVarDict,
+  EnvVarsDict,
   EnvVarInstance,
 } from "./types/env-var-data.type";
 import { Tokens } from "./types/tokens.type";
@@ -43,7 +43,7 @@ export const isWordFileVariable = (word: string): boolean => {
 };
 
 export const getUpdatedEnvVarData = (
-  variables: EnvVarDict,
+  variables: EnvVarsDict,
   config: string,
   envVar: string,
   valueType: ValueType,

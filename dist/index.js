@@ -34,9 +34,13 @@ const main_2 = __importDefault(require("./config-parser/main"));
 const md_generator_1 = require("./md-generator/md-generator");
 const file_utils_1 = require("./utils/file/file-utils");
 const helper_utils_1 = require("./utils/misc/helper-utils");
-const writeJsonFile = (jsonFileName, envVarDict) => {
+const writeJsonFile = (jsonFileName, envVarDict, version) => {
     console.log(JSON.stringify(envVarDict, undefined, 2));
-    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(envVarDict, undefined, 2));
+    const jsonFileContent = {
+        version: version !== null && version !== void 0 ? version : "0.0.1",
+        envVars: envVarDict,
+    };
+    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(jsonFileContent, undefined, 2));
     console.log("Json file has been created/updated");
 };
 const writeMdFile = (mdFileName, envVarDict) => {
@@ -46,14 +50,14 @@ const writeMdFile = (mdFileName, envVarDict) => {
 };
 const main = () => {
     const fileArgs = (0, arg_parser_1.parseArgs)();
-    let variablesDict = {};
+    const version = fileArgs.version;
     if (fileArgs.command === command_type_1.Command.PARSE) {
         const configFileName = fileArgs.configFile;
         const configFileType = fileArgs.configFileType;
         const jsonFileName = fileArgs.jsonFile;
         const append = fileArgs.append;
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
-        variablesDict = (0, main_1.default)(keyValuePairs);
+        let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
             variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
@@ -62,18 +66,19 @@ const main = () => {
             }
             else {
                 console.log("Environment variables have changed - proceeding to update json file.");
-                writeJsonFile(jsonFileName, variablesDict);
+                writeJsonFile(jsonFileName, variablesDict, version);
             }
         }
         else {
             console.log(`Json file ${jsonFileName} does not exist, will be creating it...`);
-            writeJsonFile(jsonFileName, variablesDict);
+            writeJsonFile(jsonFileName, variablesDict, version);
         }
     }
     else if (fileArgs.command === command_type_1.Command.GEN) {
         const jsonFileName = fileArgs.jsonFile;
         const mdFileName = fileArgs.mdFile;
-        variablesDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+        const jsonFileContent = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+        const variablesDict = jsonFileContent.envVars;
         console.log(JSON.stringify(variablesDict, undefined, 2));
         writeMdFile(mdFileName, variablesDict);
     }
@@ -84,7 +89,7 @@ const main = () => {
         const mdFileName = fileArgs.mdFile;
         const append = fileArgs.append;
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
-        variablesDict = (0, main_1.default)(keyValuePairs);
+        let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
             variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
@@ -93,12 +98,12 @@ const main = () => {
             }
             else {
                 console.log("Environment variables have changed - proceeding to update json file.");
-                writeJsonFile(jsonFileName, variablesDict);
+                writeJsonFile(jsonFileName, variablesDict, version);
             }
         }
         else {
             console.log(`Json file ${jsonFileName} does not exist, will be creating it...`);
-            writeJsonFile(jsonFileName, variablesDict);
+            writeJsonFile(jsonFileName, variablesDict, version);
         }
         writeMdFile(mdFileName, variablesDict);
     }

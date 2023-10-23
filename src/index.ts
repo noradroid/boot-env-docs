@@ -5,21 +5,32 @@ import { Command } from "./arg-parser/types/command.type";
 import parseKeyValuePairsIntoEnvVarDict, {
   mergeEnvVarDicts,
 } from "./env-var-parser/main";
-import { EnvVarDict } from "./env-var-parser/types/env-var-data.type";
+import { EnvVarsDict } from "./env-var-parser/types/env-var-data.type";
 import parseInputFileIntoKeyValuePairs from "./config-parser/main";
 import { generateMdFromJson } from "./md-generator/md-generator";
 import { writeFile, isFileExist, readFile } from "./utils/file/file-utils";
 import { isObjsEqual } from "./utils/misc/helper-utils";
+import { Version } from "./types/version.type";
+import { EnvVarsInfo } from "./types/env-vars-info.type";
 
-const writeJsonFile = (jsonFileName: string, envVarDict: EnvVarDict): void => {
+const writeJsonFile = (
+  jsonFileName: string,
+  envVarDict: EnvVarsDict,
+  version: Version | undefined
+): void => {
   console.log(JSON.stringify(envVarDict, undefined, 2));
 
-  writeFile(jsonFileName, JSON.stringify(envVarDict, undefined, 2));
+  const jsonFileContent: EnvVarsInfo = {
+    version: version ?? "0.0.1",
+    envVars: envVarDict,
+  };
+
+  writeFile(jsonFileName, JSON.stringify(jsonFileContent, undefined, 2));
 
   console.log("Json file has been created/updated");
 };
 
-const writeMdFile = (mdFileName: string, envVarDict: EnvVarDict): void => {
+const writeMdFile = (mdFileName: string, envVarDict: EnvVarsDict): void => {
   const doc = generateMdFromJson(envVarDict);
 
   writeFile(mdFileName, doc);
@@ -30,7 +41,7 @@ const writeMdFile = (mdFileName: string, envVarDict: EnvVarDict): void => {
 const main = () => {
   const fileArgs = parseArgs();
 
-  let variablesDict: any = {};
+  const version = fileArgs.version;
 
   if (fileArgs.command === Command.PARSE) {
     const configFileName = fileArgs.configFile;
@@ -43,7 +54,7 @@ const main = () => {
       configFileType
     );
 
-    variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
+    let variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
     if (append && isFileExist(jsonFileName)) {
       const ogDict = JSON.parse(readFile(jsonFileName));
@@ -59,19 +70,21 @@ const main = () => {
           "Environment variables have changed - proceeding to update json file."
         );
 
-        writeJsonFile(jsonFileName, variablesDict);
+        writeJsonFile(jsonFileName, variablesDict, version);
       }
     } else {
       console.log(
         `Json file ${jsonFileName} does not exist, will be creating it...`
       );
-      writeJsonFile(jsonFileName, variablesDict);
+      writeJsonFile(jsonFileName, variablesDict, version);
     }
   } else if (fileArgs.command === Command.GEN) {
     const jsonFileName = fileArgs.jsonFile;
     const mdFileName = fileArgs.mdFile;
 
-    variablesDict = JSON.parse(readFile(jsonFileName));
+    const jsonFileContent: EnvVarsInfo = JSON.parse(readFile(jsonFileName));
+
+    const variablesDict = jsonFileContent.envVars;
 
     console.log(JSON.stringify(variablesDict, undefined, 2));
 
@@ -88,7 +101,7 @@ const main = () => {
       configFileType
     );
 
-    variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
+    let variablesDict = parseKeyValuePairsIntoEnvVarDict(keyValuePairs);
 
     if (append && isFileExist(jsonFileName)) {
       const ogDict = JSON.parse(readFile(jsonFileName));
@@ -104,13 +117,13 @@ const main = () => {
           "Environment variables have changed - proceeding to update json file."
         );
 
-        writeJsonFile(jsonFileName, variablesDict);
+        writeJsonFile(jsonFileName, variablesDict, version);
       }
     } else {
       console.log(
         `Json file ${jsonFileName} does not exist, will be creating it...`
       );
-      writeJsonFile(jsonFileName, variablesDict);
+      writeJsonFile(jsonFileName, variablesDict, version);
     }
 
     writeMdFile(mdFileName, variablesDict);

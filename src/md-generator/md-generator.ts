@@ -1,5 +1,5 @@
 import { Markdown, bold } from "@scdev/declarative-markdown";
-import { EnvVarDict } from "../env-var-parser/types/env-var-data.type";
+import { EnvVarsDict } from "../env-var-parser/types/env-var-data.type";
 
 const parseTextIntoCode = (text: string): string => {
   return `
@@ -9,7 +9,7 @@ ${text}
   `;
 };
 
-export const generateMdFromJson = (dict: EnvVarDict): string => {
+export const generateMdFromJson = (dict: EnvVarsDict): string => {
   const md = new Markdown("Environment Variables Documentation");
 
   Object.values(dict).forEach((info) => {

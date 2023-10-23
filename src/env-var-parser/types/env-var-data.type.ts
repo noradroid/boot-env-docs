@@ -1,6 +1,6 @@
 import { DefaultValue } from "./default-value.type";
 
-export type EnvVarDict = { [envVar: string]: EnvVarData };
+export type EnvVarsDict = { [envVar: string]: EnvVarData };
 
 export type EnvVarData = {
   envVar: string;
