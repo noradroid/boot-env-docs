@@ -20,6 +20,10 @@ export const generateMdFromJson = (envVarStore: EnvVarStore): string => {
   Object.values(envVarsDict).forEach((info) => {
     md.header(info.envVar, 3).paragraph(info.description);
 
+    md.paragraph(`Updated version: ${info.updatedVersion}`);
+
+    md.paragraph(`Introduced version: ${info.introducedVersion}`);
+
     md.paragraph(`${bold("Type:")} ${info.type}`);
 
     md.paragraph(`${bold("Default value:")}`);

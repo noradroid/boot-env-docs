@@ -27,7 +27,7 @@ export const updateEnvVarsDict = (
       if (isEnvVarDataChanged(ogData, data)) {
         updated[envVar] = {
           ...ogData,
-          version: data.version,
+          updatedVersion: data.updatedVersion,
           type: data.type,
           default: data.default,
           instances: data.instances,
@@ -45,10 +45,11 @@ export const addVersionToEnvVarsDict = (
   version: Version | undefined
 ): EnvVarsDict => {
   const updated: EnvVarsDict = clone(dict);
-  Object.entries(dict).forEach(([envVar, data]: [string, EnvVarData]) => {
+  Object.keys(dict).forEach((envVar: string) => {
     updated[envVar] = {
       ...updated[envVar],
-      version,
+      introducedVersion: version,
+      updatedVersion: version,
     };
   });
   return updated;

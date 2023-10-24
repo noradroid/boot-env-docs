@@ -13,7 +13,7 @@ const updateEnvVarsDict = (oldDict, newDict) => {
         if (envVar in updated) {
             const ogData = updated[envVar];
             if (isEnvVarDataChanged(ogData, data)) {
-                updated[envVar] = Object.assign(Object.assign({}, ogData), { version: data.version, type: data.type, default: data.default, instances: data.instances });
+                updated[envVar] = Object.assign(Object.assign({}, ogData), { updatedVersion: data.updatedVersion, type: data.type, default: data.default, instances: data.instances });
             }
         }
         else {
@@ -25,8 +25,8 @@ const updateEnvVarsDict = (oldDict, newDict) => {
 exports.updateEnvVarsDict = updateEnvVarsDict;
 const addVersionToEnvVarsDict = (dict, version) => {
     const updated = (0, helper_utils_1.clone)(dict);
-    Object.entries(dict).forEach(([envVar, data]) => {
-        updated[envVar] = Object.assign(Object.assign({}, updated[envVar]), { version });
+    Object.keys(dict).forEach((envVar) => {
+        updated[envVar] = Object.assign(Object.assign({}, updated[envVar]), { introducedVersion: version, updatedVersion: version });
     });
     return updated;
 };

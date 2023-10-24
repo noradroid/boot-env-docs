@@ -9,7 +9,8 @@ export type EnvVarData = {
   default?: DefaultValue;
   instances: EnvVarInstance[];
   description: string;
-  version?: Version;
+  introducedVersion?: Version;
+  updatedVersion?: Version;
 };
 
 export type EnvVarInstance = {
