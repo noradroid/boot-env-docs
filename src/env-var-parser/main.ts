@@ -1,9 +1,8 @@
 import { KeyValuePairs } from "../config-parser/shared/types/key-value.type";
 import { formatParseError } from "../utils/errors/error-utils";
-import { clone, isString } from "../utils/misc/helper-utils";
+import { isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
 import { tokenise } from "./env-var-tokeniser";
-import { findInstanceIndex, getUpdatedEnvVarData } from "./env-var-utils";
 import { validateEnvVarSyntax } from "./env-var-validator";
 import {
   convertValueIntoType,
@@ -33,7 +32,35 @@ const getEnvVarDefaults = (value: string): EnvVarDefault[] => {
   return envVarDefaults;
 };
 
-const main = (keyValuePairs: KeyValuePairs): EnvVarsDict => {
+const getUpdatedEnvVarData = (
+  variables: EnvVarsDict,
+  config: string,
+  envVar: string,
+  valueType: ValueType,
+  defaultValue: DefaultValue
+): EnvVarData => {
+  const envVarInstance: EnvVarInstance = { key: config, default: defaultValue };
+  if (envVar in variables) {
+    return {
+      ...variables[envVar],
+      type: valueType,
+      default: defaultValue,
+      instances: variables[envVar].instances.concat(envVarInstance),
+    };
+  } else {
+    return {
+      envVar,
+      description: "",
+      type: valueType,
+      default: defaultValue,
+      instances: [envVarInstance],
+    };
+  }
+};
+
+export const parseKeyValuePairsIntoEnvVarDict = (
+  keyValuePairs: KeyValuePairs
+): EnvVarsDict => {
   const variables: EnvVarsDict = {};
   // tokenize each value
   keyValuePairs.forEach((keyValue) => {
@@ -67,50 +94,4 @@ const main = (keyValuePairs: KeyValuePairs): EnvVarsDict => {
     }
   });
   return variables;
-};
-
-export default main;
-
-const mergeInstances = (
-  oldInstances: EnvVarInstance[],
-  newInstances: EnvVarInstance[]
-): EnvVarInstance[] => {
-  const mergedInstances: EnvVarInstance[] = clone(oldInstances);
-  newInstances.forEach((newInstance) => {
-    const oldInstanceIndex = findInstanceIndex(
-      mergedInstances,
-      newInstance.key
-    );
-    if (oldInstanceIndex !== -1) {
-      mergedInstances[oldInstanceIndex] = newInstance;
-    } else {
-      mergedInstances.push(newInstance);
-    }
-  });
-  return mergedInstances;
-};
-
-export const mergeEnvVarDicts = (
-  oldDict: EnvVarsDict,
-  newDict: EnvVarsDict
-): EnvVarsDict => {
-  const merged: EnvVarsDict = clone(oldDict);
-  Object.entries(newDict).forEach(
-    ([newEnvVar, newData]: [string, EnvVarData]) => {
-      if (newEnvVar in merged) {
-        const mergedInstances = mergeInstances(
-          merged[newEnvVar].instances,
-          newData.instances
-        );
-        merged[newEnvVar] = {
-          ...merged[newEnvVar],
-          default: newData.default,
-          instances: mergedInstances,
-        };
-      } else {
-        merged[newEnvVar] = newData;
-      }
-    }
-  );
-  return merged;
 };

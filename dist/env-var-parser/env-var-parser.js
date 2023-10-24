@@ -17,7 +17,7 @@ const parseTokensIntoEnvVarDefault = (tokens, startIndex, endIndex) => {
         throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
     }
     const configName = tokens[colonIndex - 1];
-    if (configName.includes(tokens_1.DOT_SEPARATOR)) {
+    if ((0, env_var_utils_1.isWordFileVariable)(configName)) {
         throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
     }
     const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");

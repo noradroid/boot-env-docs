@@ -1,38 +1,13 @@
 #!/usr/bin/env node
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const arg_parser_1 = require("./arg-parser/arg-parser");
 const command_type_1 = require("./arg-parser/types/command.type");
-const main_1 = __importStar(require("./env-var-parser/main"));
-const main_2 = __importDefault(require("./config-parser/main"));
+const main_1 = require("./env-var-parser/main");
+const main_2 = require("./config-parser/main");
 const md_generator_1 = require("./md-generator/md-generator");
 const file_utils_1 = require("./utils/file/file-utils");
+const main_3 = require("./env-var-storage/main");
 const writeJsonFile = (jsonFileName, envVarsInfo) => {
     console.log(JSON.stringify(envVarsInfo.envVars, undefined, 2));
     (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(envVarsInfo, undefined, 2));
@@ -51,12 +26,12 @@ const main = () => {
         const jsonFileName = fileArgs.jsonFile;
         const append = fileArgs.append;
         const version = fileArgs.version;
-        const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
-        let variablesDict = (0, main_1.default)(keyValuePairs);
+        const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
+        let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
             const ogDict = ogEnvVarsInfo.envVars;
-            variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
+            variablesDict = (0, main_3.mergeEnvVarDicts)(ogDict, variablesDict);
         }
         const envVarsInfo = {
             version,
@@ -78,12 +53,12 @@ const main = () => {
         const mdFileName = fileArgs.mdFile;
         const append = fileArgs.append;
         const version = fileArgs.version;
-        const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
-        let variablesDict = (0, main_1.default)(keyValuePairs);
+        const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
+        let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
             const ogDict = ogEnvVarsInfo.envVars;
-            variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
+            variablesDict = (0, main_3.mergeEnvVarDicts)(ogDict, variablesDict);
         }
         const envVarsInfo = {
             version,

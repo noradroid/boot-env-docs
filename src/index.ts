@@ -2,13 +2,12 @@
 
 import { parseArgs } from "./arg-parser/arg-parser";
 import { Command } from "./arg-parser/types/command.type";
-import parseKeyValuePairsIntoEnvVarDict, {
-  mergeEnvVarDicts,
-} from "./env-var-parser/main";
-import parseInputFileIntoKeyValuePairs from "./config-parser/main";
+import { parseKeyValuePairsIntoEnvVarDict } from "./env-var-parser/main";
+import { parseInputFileIntoKeyValuePairs } from "./config-parser/main";
 import { generateMdFromJson } from "./md-generator/md-generator";
 import { writeFile, isFileExist, readFile } from "./utils/file/file-utils";
 import { EnvVarsInfo } from "./types/env-vars-info.type";
+import { mergeEnvVarDicts } from "./env-var-storage/main";
 
 const writeJsonFile = (
   jsonFileName: string,

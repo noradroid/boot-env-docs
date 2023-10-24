@@ -1,5 +1,9 @@
-import { COLON_SEPARATOR, DOT_SEPARATOR } from "./constants/tokens";
-import { getEnvVarStartIndex, getEnvVarEndIndex } from "./env-var-utils";
+import { COLON_SEPARATOR } from "./constants/tokens";
+import {
+  getEnvVarStartIndex,
+  getEnvVarEndIndex,
+  isWordFileVariable,
+} from "./env-var-utils";
 import { NonEnvVarConfigError } from "./errors/non-env-var-config.error";
 import { EnvVarDefault } from "./types/env-var-default.type";
 import { Tokens } from "./types/tokens.type";
@@ -21,7 +25,7 @@ const parseTokensIntoEnvVarDefault = (
     throw new NonEnvVarConfigError(configName);
   }
   const configName = tokens[colonIndex - 1];
-  if (configName.includes(DOT_SEPARATOR)) {
+  if (isWordFileVariable(configName)) {
     throw new NonEnvVarConfigError(configName);
   }
   const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");

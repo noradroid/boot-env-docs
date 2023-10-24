@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseInputFileIntoKeyValuePairs = void 0;
 const yaml_1 = require("yaml");
 const error_utils_1 = require("../utils/errors/error-utils");
 const file_utils_1 = require("../utils/file/file-utils");
@@ -9,7 +10,7 @@ const properties_validator_1 = require("./properties/properties-validator");
 const file_type_1 = require("./shared/types/file.type");
 const yaml_parser_1 = require("./yaml/yaml-parser");
 const yaml_validator_1 = require("./yaml/yaml-validator");
-const main = (fileName, fileType) => {
+const parseInputFileIntoKeyValuePairs = (fileName, fileType) => {
     try {
         const contents = (0, file_utils_1.readFile)(fileName);
         if (fileType === file_type_1.FileType.YAML) {
@@ -40,4 +41,4 @@ const main = (fileName, fileType) => {
         process.exit(1);
     }
 };
-exports.default = main;
+exports.parseInputFileIntoKeyValuePairs = parseInputFileIntoKeyValuePairs;

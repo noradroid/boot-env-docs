@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mergeEnvVarDicts = void 0;
+exports.parseKeyValuePairsIntoEnvVarDict = void 0;
 const error_utils_1 = require("../utils/errors/error-utils");
 const helper_utils_1 = require("../utils/misc/helper-utils");
 const env_var_parser_1 = require("./env-var-parser");
 const env_var_tokeniser_1 = require("./env-var-tokeniser");
-const env_var_utils_1 = require("./env-var-utils");
 const env_var_validator_1 = require("./env-var-validator");
 const env_var_value_type_parser_1 = require("./env-var-value-type/env-var-value-type-parser");
 const env_var_parse_error_1 = require("./errors/env-var-parse.error");
@@ -22,7 +21,22 @@ const getEnvVarDefaults = (value) => {
     const envVarDefaults = (0, env_var_parser_1.parseTokensIntoEnvVarDefaults)(valueTokens);
     return envVarDefaults;
 };
-const main = (keyValuePairs) => {
+const getUpdatedEnvVarData = (variables, config, envVar, valueType, defaultValue) => {
+    const envVarInstance = { key: config, default: defaultValue };
+    if (envVar in variables) {
+        return Object.assign(Object.assign({}, variables[envVar]), { type: valueType, default: defaultValue, instances: variables[envVar].instances.concat(envVarInstance) });
+    }
+    else {
+        return {
+            envVar,
+            description: "",
+            type: valueType,
+            default: defaultValue,
+            instances: [envVarInstance],
+        };
+    }
+};
+const parseKeyValuePairsIntoEnvVarDict = (keyValuePairs) => {
     const variables = {};
     // tokenize each value
     keyValuePairs.forEach((keyValue) => {
@@ -32,7 +46,7 @@ const main = (keyValuePairs) => {
                 envVarDefaults.forEach((envVarDefault) => {
                     const valueType = (0, env_var_value_type_parser_1.getValueType)(envVarDefault.default);
                     const defaultValue = (0, env_var_value_type_parser_1.convertValueIntoType)(envVarDefault.default, valueType);
-                    variables[envVarDefault.envVar] = (0, env_var_utils_1.getUpdatedEnvVarData)(variables, keyValue.key, envVarDefault.envVar, valueType, defaultValue);
+                    variables[envVarDefault.envVar] = getUpdatedEnvVarData(variables, keyValue.key, envVarDefault.envVar, valueType, defaultValue);
                 });
             }
             catch (err) {
@@ -50,31 +64,4 @@ const main = (keyValuePairs) => {
     });
     return variables;
 };
-exports.default = main;
-const mergeInstances = (oldInstances, newInstances) => {
-    const mergedInstances = (0, helper_utils_1.clone)(oldInstances);
-    newInstances.forEach((newInstance) => {
-        const oldInstanceIndex = (0, env_var_utils_1.findInstanceIndex)(mergedInstances, newInstance.key);
-        if (oldInstanceIndex !== -1) {
-            mergedInstances[oldInstanceIndex] = newInstance;
-        }
-        else {
-            mergedInstances.push(newInstance);
-        }
-    });
-    return mergedInstances;
-};
-const mergeEnvVarDicts = (oldDict, newDict) => {
-    const merged = (0, helper_utils_1.clone)(oldDict);
-    Object.entries(newDict).forEach(([newEnvVar, newData]) => {
-        if (newEnvVar in merged) {
-            const mergedInstances = mergeInstances(merged[newEnvVar].instances, newData.instances);
-            merged[newEnvVar] = Object.assign(Object.assign({}, merged[newEnvVar]), { default: newData.default, instances: mergedInstances });
-        }
-        else {
-            merged[newEnvVar] = newData;
-        }
-    });
-    return merged;
-};
-exports.mergeEnvVarDicts = mergeEnvVarDicts;
+exports.parseKeyValuePairsIntoEnvVarDict = parseKeyValuePairsIntoEnvVarDict;

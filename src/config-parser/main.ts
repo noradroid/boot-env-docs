@@ -9,7 +9,10 @@ import { KeyValuePairs } from "./shared/types/key-value.type";
 import { parseDotYaml } from "./yaml/yaml-parser";
 import { validateDotYaml } from "./yaml/yaml-validator";
 
-const main = (fileName: string, fileType: FileType) => {
+export const parseInputFileIntoKeyValuePairs = (
+  fileName: string,
+  fileType: FileType
+) => {
   try {
     const contents: string = readFile(fileName);
 
@@ -37,5 +40,3 @@ const main = (fileName: string, fileType: FileType) => {
     process.exit(1);
   }
 };
-
-export default main;
