@@ -9,9 +9,12 @@ ${text}
 \`\`\`
   `;
 };
-const generateMdFromJson = (dict) => {
+const generateMdFromJson = (envVarsInfo) => {
+    var _a;
+    const envVarsDict = envVarsInfo.envVars;
     const md = new declarative_markdown_1.Markdown("Environment Variables Documentation");
-    Object.values(dict).forEach((info) => {
+    md.paragraph(`Last updated version: ${(_a = envVarsDict.version) !== null && _a !== void 0 ? _a : "<undefined>"}`);
+    Object.values(envVarsDict).forEach((info) => {
         var _a, _b;
         md.header(info.envVar, 3).paragraph(info.description);
         md.paragraph(`${(0, declarative_markdown_1.bold)("Type:")} ${info.type}`);

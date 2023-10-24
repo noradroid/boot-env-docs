@@ -33,18 +33,13 @@ const main_1 = __importStar(require("./env-var-parser/main"));
 const main_2 = __importDefault(require("./config-parser/main"));
 const md_generator_1 = require("./md-generator/md-generator");
 const file_utils_1 = require("./utils/file/file-utils");
-const helper_utils_1 = require("./utils/misc/helper-utils");
-const writeJsonFile = (jsonFileName, envVarDict, version) => {
-    console.log(JSON.stringify(envVarDict, undefined, 2));
-    const jsonFileContent = {
-        version,
-        envVars: envVarDict,
-    };
-    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(jsonFileContent, undefined, 2));
+const writeJsonFile = (jsonFileName, envVarsInfo) => {
+    console.log(JSON.stringify(envVarsInfo.envVars, undefined, 2));
+    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(envVarsInfo, undefined, 2));
     console.log("Json file has been created/updated");
 };
-const writeMdFile = (mdFileName, envVarDict) => {
-    const doc = (0, md_generator_1.generateMdFromJson)(envVarDict);
+const writeMdFile = (mdFileName, envVarsInfo) => {
+    const doc = (0, md_generator_1.generateMdFromJson)(envVarsInfo);
     (0, file_utils_1.writeFile)(mdFileName, doc);
     console.log("Md file has been created");
 };
@@ -59,28 +54,22 @@ const main = () => {
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
-            const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogDict = ogEnvVarsInfo.envVars;
             variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
-            if ((0, helper_utils_1.isObjsEqual)(ogDict, variablesDict)) {
-                console.log("Environment variables have not changed - json file will not be updated.");
-            }
-            else {
-                console.log("Environment variables have changed - proceeding to update json file.");
-                writeJsonFile(jsonFileName, variablesDict, version);
-            }
         }
-        else {
-            console.log(`Json file ${jsonFileName} does not exist, will be creating it...`);
-            writeJsonFile(jsonFileName, variablesDict, version);
-        }
+        const envVarsInfo = {
+            version,
+            envVars: variablesDict,
+        };
+        writeJsonFile(jsonFileName, envVarsInfo);
     }
     else if (fileArgs.command === command_type_1.Command.GEN) {
         const jsonFileName = fileArgs.jsonFile;
         const mdFileName = fileArgs.mdFile;
-        const jsonFileContent = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
-        const variablesDict = jsonFileContent.envVars;
-        console.log(JSON.stringify(variablesDict, undefined, 2));
-        writeMdFile(mdFileName, variablesDict);
+        const envVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+        console.log(JSON.stringify(envVarsInfo.envVars, undefined, 2));
+        writeMdFile(mdFileName, envVarsInfo);
     }
     else {
         const configFileName = fileArgs.configFile;
@@ -92,21 +81,16 @@ const main = () => {
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
-            const ogDict = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogDict = ogEnvVarsInfo.envVars;
             variablesDict = (0, main_1.mergeEnvVarDicts)(ogDict, variablesDict);
-            if ((0, helper_utils_1.isObjsEqual)(ogDict, variablesDict)) {
-                console.log("Environment variables have not changed - json file will not be updated.");
-            }
-            else {
-                console.log("Environment variables have changed - proceeding to update json file.");
-                writeJsonFile(jsonFileName, variablesDict, version);
-            }
         }
-        else {
-            console.log(`Json file ${jsonFileName} does not exist, will be creating it...`);
-            writeJsonFile(jsonFileName, variablesDict, version);
-        }
-        writeMdFile(mdFileName, variablesDict);
+        const envVarsInfo = {
+            version,
+            envVars: variablesDict,
+        };
+        writeJsonFile(jsonFileName, envVarsInfo);
+        writeMdFile(mdFileName, envVarsInfo);
     }
 };
 main();
