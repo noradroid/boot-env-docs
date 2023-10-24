@@ -26,7 +26,8 @@ const main = () => {
         const jsonFileName = fileArgs.jsonFile;
         const append = fileArgs.append;
         const version = fileArgs.version;
-        const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
+        const configFileContent = (0, file_utils_1.readFile)(configFileName);
+        const keyValuePairs = (0, main_2.parseIntoKeyValuePairs)(configFileContent, configFileType);
         let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogEnvVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
@@ -53,7 +54,8 @@ const main = () => {
         const mdFileName = fileArgs.mdFile;
         const append = fileArgs.append;
         const version = fileArgs.version;
-        const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
+        const configFileContent = (0, file_utils_1.readFile)(configFileName);
+        const keyValuePairs = (0, main_2.parseIntoKeyValuePairs)(configFileContent, configFileType);
         let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
             const ogEnvVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));

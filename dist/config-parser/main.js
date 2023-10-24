@@ -1,26 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseInputFileIntoKeyValuePairs = void 0;
+exports.parseIntoKeyValuePairs = void 0;
 const yaml_1 = require("yaml");
 const error_utils_1 = require("../utils/errors/error-utils");
-const file_utils_1 = require("../utils/file/file-utils");
 const properties_parse_error_1 = require("./properties/errors/properties-parse.error");
 const properties_parser_1 = require("./properties/properties-parser");
 const properties_validator_1 = require("./properties/properties-validator");
 const file_type_1 = require("./shared/types/file.type");
 const yaml_parser_1 = require("./yaml/yaml-parser");
 const yaml_validator_1 = require("./yaml/yaml-validator");
-const parseInputFileIntoKeyValuePairs = (fileName, fileType) => {
+const parseIntoKeyValuePairs = (fileContent, fileType) => {
     try {
-        const contents = (0, file_utils_1.readFile)(fileName);
         if (fileType === file_type_1.FileType.YAML) {
-            (0, yaml_validator_1.validateDotYaml)(contents);
-            const keyValuePairs = (0, yaml_parser_1.parseDotYaml)(contents);
+            (0, yaml_validator_1.validateDotYaml)(fileContent);
+            const keyValuePairs = (0, yaml_parser_1.parseDotYaml)(fileContent);
             return keyValuePairs;
         }
         else {
-            (0, properties_validator_1.validateDotProperties)(contents);
-            const keyValuePairs = (0, properties_parser_1.parseDotProperties)(contents);
+            (0, properties_validator_1.validateDotProperties)(fileContent);
+            const keyValuePairs = (0, properties_parser_1.parseDotProperties)(fileContent);
             return keyValuePairs;
         }
     }
@@ -41,4 +39,4 @@ const parseInputFileIntoKeyValuePairs = (fileName, fileType) => {
         process.exit(1);
     }
 };
-exports.parseInputFileIntoKeyValuePairs = parseInputFileIntoKeyValuePairs;
+exports.parseIntoKeyValuePairs = parseIntoKeyValuePairs;

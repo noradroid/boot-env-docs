@@ -3,7 +3,7 @@
 import { parseArgs } from "./arg-parser/arg-parser";
 import { Command } from "./arg-parser/types/command.type";
 import { parseKeyValuePairsIntoEnvVarDict } from "./env-var-parser/main";
-import { parseInputFileIntoKeyValuePairs } from "./config-parser/main";
+import { parseIntoKeyValuePairs } from "./config-parser/main";
 import { generateMdFromJson } from "./md-generator/md-generator";
 import { writeFile, isFileExist, readFile } from "./utils/file/file-utils";
 import { EnvVarStore } from "./shared/models/env-var-store/env-vars-info.type";
@@ -38,8 +38,9 @@ const main = () => {
     const append = fileArgs.append;
     const version = fileArgs.version;
 
-    const keyValuePairs = parseInputFileIntoKeyValuePairs(
-      configFileName,
+    const configFileContent: string = readFile(configFileName);
+    const keyValuePairs = parseIntoKeyValuePairs(
+      configFileContent,
       configFileType
     );
 
@@ -75,8 +76,9 @@ const main = () => {
     const append = fileArgs.append;
     const version = fileArgs.version;
 
-    const keyValuePairs = parseInputFileIntoKeyValuePairs(
-      configFileName,
+    const configFileContent: string = readFile(configFileName);
+    const keyValuePairs = parseIntoKeyValuePairs(
+      configFileContent,
       configFileType
     );
 
