@@ -11,3 +11,8 @@ export enum FileType {
   JSON = JSON_EXT,
   MD = MD_EXT,
 }
+
+export enum ConfigFileType {
+  YAML = YAML_EXT,
+  PROPERTIES = PROPERTIES_EXT,
+}

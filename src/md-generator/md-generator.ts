@@ -1,4 +1,5 @@
 import { Markdown, bold } from "@scdev/declarative-markdown";
+
 import { EnvVarStore } from "../shared/models/env-var-store/env-vars-info.type";
 
 const parseTextIntoCode = (text: string): string => {

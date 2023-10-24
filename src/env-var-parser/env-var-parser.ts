@@ -1,7 +1,7 @@
 import { COLON_SEPARATOR } from "./constants/tokens";
 import {
-  getEnvVarStartIndex,
   getEnvVarEndIndex,
+  getEnvVarStartIndex,
   isWordFileVariable,
 } from "./env-var-utils";
 import { NonEnvVarConfigError } from "./errors/non-env-var-config.error";

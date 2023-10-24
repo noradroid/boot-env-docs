@@ -1,35 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mergeEnvVarDicts = exports.findInstanceIndex = void 0;
+exports.addVersionToEnvVarsDict = exports.updateEnvVarsDict = void 0;
 const helper_utils_1 = require("../utils/misc/helper-utils");
-const findInstanceIndex = (arr, key) => {
-    return arr.findIndex((ins) => ins.key === key);
+const isEnvVarDataChanged = (oldData, newData) => {
+    return (oldData.default !== newData.default ||
+        oldData.type !== newData.type ||
+        !(0, helper_utils_1.isObjsEqual)(oldData.instances, newData.instances));
 };
-exports.findInstanceIndex = findInstanceIndex;
-const mergeInstances = (oldInstances, newInstances) => {
-    const mergedInstances = (0, helper_utils_1.clone)(oldInstances);
-    newInstances.forEach((newInstance) => {
-        const oldInstanceIndex = (0, exports.findInstanceIndex)(mergedInstances, newInstance.key);
-        if (oldInstanceIndex !== -1) {
-            mergedInstances[oldInstanceIndex] = newInstance;
+const updateEnvVarsDict = (oldDict, newDict) => {
+    const updated = (0, helper_utils_1.clone)(oldDict);
+    Object.entries(newDict).forEach(([envVar, data]) => {
+        if (envVar in updated) {
+            const ogData = updated[envVar];
+            if (isEnvVarDataChanged(ogData, data)) {
+                updated[envVar] = Object.assign(Object.assign({}, ogData), { version: data.version, type: data.type, default: data.default, instances: data.instances });
+            }
         }
         else {
-            mergedInstances.push(newInstance);
+            updated[envVar] = data;
         }
     });
-    return mergedInstances;
+    return updated;
 };
-const mergeEnvVarDicts = (oldDict, newDict) => {
-    const merged = (0, helper_utils_1.clone)(oldDict);
-    Object.entries(newDict).forEach(([newEnvVar, newData]) => {
-        if (newEnvVar in merged) {
-            const mergedInstances = mergeInstances(merged[newEnvVar].instances, newData.instances);
-            merged[newEnvVar] = Object.assign(Object.assign({}, merged[newEnvVar]), { default: newData.default, instances: mergedInstances });
-        }
-        else {
-            merged[newEnvVar] = newData;
-        }
+exports.updateEnvVarsDict = updateEnvVarsDict;
+const addVersionToEnvVarsDict = (dict, version) => {
+    const updated = (0, helper_utils_1.clone)(dict);
+    Object.entries(dict).forEach(([envVar, data]) => {
+        updated[envVar] = Object.assign(Object.assign({}, updated[envVar]), { version });
     });
-    return merged;
+    return updated;
 };
-exports.mergeEnvVarDicts = mergeEnvVarDicts;
+exports.addVersionToEnvVarsDict = addVersionToEnvVarsDict;

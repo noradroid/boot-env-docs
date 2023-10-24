@@ -1,57 +1,55 @@
 import {
-  EnvVarInstance,
   EnvVarsDict,
   EnvVarData,
 } from "../shared/models/env-var/env-var-data.type";
-import { clone } from "../utils/misc/helper-utils";
+import { Version } from "../shared/models/version.type";
+import { clone, isObjsEqual } from "../utils/misc/helper-utils";
 
-export const findInstanceIndex = (
-  arr: EnvVarInstance[],
-  key: string
-): number => {
-  return arr.findIndex((ins) => ins.key === key);
+const isEnvVarDataChanged = (
+  oldData: EnvVarData,
+  newData: EnvVarData
+): boolean => {
+  return (
+    oldData.default !== newData.default ||
+    oldData.type !== newData.type ||
+    !isObjsEqual(oldData.instances, newData.instances)
+  );
 };
 
-const mergeInstances = (
-  oldInstances: EnvVarInstance[],
-  newInstances: EnvVarInstance[]
-): EnvVarInstance[] => {
-  const mergedInstances: EnvVarInstance[] = clone(oldInstances);
-  newInstances.forEach((newInstance) => {
-    const oldInstanceIndex = findInstanceIndex(
-      mergedInstances,
-      newInstance.key
-    );
-    if (oldInstanceIndex !== -1) {
-      mergedInstances[oldInstanceIndex] = newInstance;
-    } else {
-      mergedInstances.push(newInstance);
-    }
-  });
-  return mergedInstances;
-};
-
-export const mergeEnvVarDicts = (
+export const updateEnvVarsDict = (
   oldDict: EnvVarsDict,
   newDict: EnvVarsDict
 ): EnvVarsDict => {
-  const merged: EnvVarsDict = clone(oldDict);
-  Object.entries(newDict).forEach(
-    ([newEnvVar, newData]: [string, EnvVarData]) => {
-      if (newEnvVar in merged) {
-        const mergedInstances = mergeInstances(
-          merged[newEnvVar].instances,
-          newData.instances
-        );
-        merged[newEnvVar] = {
-          ...merged[newEnvVar],
-          default: newData.default,
-          instances: mergedInstances,
+  const updated: EnvVarsDict = clone(oldDict);
+  Object.entries(newDict).forEach(([envVar, data]: [string, EnvVarData]) => {
+    if (envVar in updated) {
+      const ogData = updated[envVar];
+      if (isEnvVarDataChanged(ogData, data)) {
+        updated[envVar] = {
+          ...ogData,
+          version: data.version,
+          type: data.type,
+          default: data.default,
+          instances: data.instances,
         };
-      } else {
-        merged[newEnvVar] = newData;
       }
+    } else {
+      updated[envVar] = data;
     }
-  );
-  return merged;
+  });
+  return updated;
+};
+
+export const addVersionToEnvVarsDict = (
+  dict: EnvVarsDict,
+  version: Version | undefined
+): EnvVarsDict => {
+  const updated: EnvVarsDict = clone(dict);
+  Object.entries(dict).forEach(([envVar, data]: [string, EnvVarData]) => {
+    updated[envVar] = {
+      ...updated[envVar],
+      version,
+    };
+  });
+  return updated;
 };

@@ -3,15 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseIntoKeyValuePairs = void 0;
 const yaml_1 = require("yaml");
 const error_utils_1 = require("../utils/errors/error-utils");
+const file_type_1 = require("../utils/file/types/file.type");
 const properties_parse_error_1 = require("./properties/errors/properties-parse.error");
 const properties_parser_1 = require("./properties/properties-parser");
 const properties_validator_1 = require("./properties/properties-validator");
-const file_type_1 = require("./shared/types/file.type");
 const yaml_parser_1 = require("./yaml/yaml-parser");
 const yaml_validator_1 = require("./yaml/yaml-validator");
 const parseIntoKeyValuePairs = (fileContent, fileType) => {
     try {
-        if (fileType === file_type_1.FileType.YAML) {
+        if (fileType === file_type_1.ConfigFileType.YAML) {
             (0, yaml_validator_1.validateDotYaml)(fileContent);
             const keyValuePairs = (0, yaml_parser_1.parseDotYaml)(fileContent);
             return keyValuePairs;

@@ -1,20 +1,20 @@
 import { YAMLParseError } from "yaml";
 
 import { formatParseError } from "../utils/errors/error-utils";
+import { ConfigFileType } from "../utils/file/types/file.type";
 import { PropertiesParseError } from "./properties/errors/properties-parse.error";
 import { parseDotProperties } from "./properties/properties-parser";
 import { validateDotProperties } from "./properties/properties-validator";
-import { FileType } from "./shared/types/file.type";
 import { KeyValuePairs } from "./shared/types/key-value.type";
 import { parseDotYaml } from "./yaml/yaml-parser";
 import { validateDotYaml } from "./yaml/yaml-validator";
 
 export const parseIntoKeyValuePairs = (
   fileContent: string,
-  fileType: FileType
+  fileType: ConfigFileType
 ) => {
   try {
-    if (fileType === FileType.YAML) {
+    if (fileType === ConfigFileType.YAML) {
       validateDotYaml(fileContent);
       const keyValuePairs: KeyValuePairs = parseDotYaml(fileContent);
       return keyValuePairs;

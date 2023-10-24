@@ -1,4 +1,10 @@
 import { KeyValuePairs } from "../config-parser/shared/types/key-value.type";
+import { DefaultValue } from "../shared/models/env-var/default-value.type";
+import {
+  EnvVarData,
+  EnvVarInstance,
+  EnvVarsDict,
+} from "../shared/models/env-var/env-var-data.type";
 import { formatParseError } from "../utils/errors/error-utils";
 import { isString } from "../utils/misc/helper-utils";
 import { parseTokensIntoEnvVarDefaults } from "./env-var-parser";
@@ -10,12 +16,6 @@ import {
 } from "./env-var-value-type/env-var-value-type-parser";
 import { ValueType } from "./env-var-value-type/types/value-type.type";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
-import { DefaultValue } from "../shared/models/env-var/default-value.type";
-import {
-  EnvVarData,
-  EnvVarsDict,
-  EnvVarInstance,
-} from "../shared/models/env-var/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
 /**

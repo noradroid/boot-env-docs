@@ -1,5 +1,6 @@
+import { Version } from "../shared/models/version.type";
 import { getFileType } from "../utils/file/file-utils";
-import { FileType } from "../utils/file/types/file.type";
+import { ConfigFileType, FileType } from "../utils/file/types/file.type";
 import {
   GEN_CMD,
   GEN_CMD_SH,
@@ -17,8 +18,6 @@ import {
   ParseCommandArgs,
   ParseGenCommandArgs,
 } from "./types/file-args.type";
-import { FileType as ConfigFileType } from "../config-parser/shared/types/file.type";
-import { Version } from "../shared/models/version.type";
 
 export const checkArgsProvided = (): void => {
   if (process.argv.length === 2) {
@@ -155,7 +154,7 @@ const getParseFileArgs = (
   return {
     command: Command.PARSE,
     configFile: fileNames[0],
-    configFileType: getFileType(fileNames[0]) as ConfigFileType,
+    configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
     append,
   };
@@ -176,7 +175,7 @@ const getParseGenFileArgs = (
   return {
     command: Command.PARSE_GEN,
     configFile: fileNames[0],
-    configFileType: getFileType(fileNames[0]) as ConfigFileType,
+    configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
     mdFile: fileNames[2],
     append,
