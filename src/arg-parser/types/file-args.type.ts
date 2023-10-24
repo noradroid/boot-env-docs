@@ -1,6 +1,6 @@
 import { FileType } from "../../config-parser/shared/types/file.type";
 import { Command } from "./command.type";
-import { Version } from "../../types/version.type";
+import { Version } from "../../shared/models/version.type";
 
 export type CommandArgs =
   | ParseCommandArgs

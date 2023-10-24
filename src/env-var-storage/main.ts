@@ -2,7 +2,7 @@ import {
   EnvVarInstance,
   EnvVarsDict,
   EnvVarData,
-} from "../env-var-parser/types/env-var-data.type";
+} from "../shared/models/env-var/env-var-data.type";
 import { clone } from "../utils/misc/helper-utils";
 
 export const findInstanceIndex = (

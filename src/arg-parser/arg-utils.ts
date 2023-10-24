@@ -18,7 +18,7 @@ import {
   ParseGenCommandArgs,
 } from "./types/file-args.type";
 import { FileType as ConfigFileType } from "../config-parser/shared/types/file.type";
-import { Version } from "../types/version.type";
+import { Version } from "../shared/models/version.type";
 
 export const checkArgsProvided = (): void => {
   if (process.argv.length === 2) {

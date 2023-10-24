@@ -1,5 +1,5 @@
 import { Markdown, bold } from "@scdev/declarative-markdown";
-import { EnvVarsInfo } from "../types/env-vars-info.type";
+import { EnvVarStore } from "../shared/models/env-var-store/env-vars-info.type";
 
 const parseTextIntoCode = (text: string): string => {
   return `
@@ -9,12 +9,12 @@ ${text}
   `;
 };
 
-export const generateMdFromJson = (envVarsInfo: EnvVarsInfo): string => {
-  const envVarsDict = envVarsInfo.envVars;
+export const generateMdFromJson = (envVarStore: EnvVarStore): string => {
+  const envVarsDict = envVarStore.envVars;
 
   const md = new Markdown("Environment Variables Documentation");
 
-  md.paragraph(`Last updated version: ${envVarsDict.version ?? "<undefined>"}`);
+  md.paragraph(`Last updated version: ${envVarStore.version ?? "<undefined>"}`);
 
   Object.values(envVarsDict).forEach((info) => {
     md.header(info.envVar, 3).paragraph(info.description);

@@ -1,4 +1,4 @@
-import { DefaultValue } from "../types/default-value.type";
+import { DefaultValue } from "../../shared/models/env-var/default-value.type";
 import { ValueType } from "./types/value-type.type";
 
 const isEmpty = (value: string): boolean => {

@@ -10,12 +10,12 @@ import {
 } from "./env-var-value-type/env-var-value-type-parser";
 import { ValueType } from "./env-var-value-type/types/value-type.type";
 import { EnvVarParseError } from "./errors/env-var-parse.error";
-import { DefaultValue } from "./types/default-value.type";
+import { DefaultValue } from "../shared/models/env-var/default-value.type";
 import {
   EnvVarData,
   EnvVarsDict,
   EnvVarInstance,
-} from "./types/env-var-data.type";
+} from "../shared/models/env-var/env-var-data.type";
 import { EnvVarDefault } from "./types/env-var-default.type";
 
 /**

@@ -8,13 +8,13 @@ const main_2 = require("./config-parser/main");
 const md_generator_1 = require("./md-generator/md-generator");
 const file_utils_1 = require("./utils/file/file-utils");
 const main_3 = require("./env-var-storage/main");
-const writeJsonFile = (jsonFileName, envVarsInfo) => {
-    console.log(JSON.stringify(envVarsInfo.envVars, undefined, 2));
-    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(envVarsInfo, undefined, 2));
+const writeJsonFile = (jsonFileName, envVarStore) => {
+    console.log(JSON.stringify(envVarStore.envVars, undefined, 2));
+    (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(envVarStore, undefined, 2));
     console.log("Json file has been created/updated");
 };
-const writeMdFile = (mdFileName, envVarsInfo) => {
-    const doc = (0, md_generator_1.generateMdFromJson)(envVarsInfo);
+const writeMdFile = (mdFileName, envVarStore) => {
+    const doc = (0, md_generator_1.generateMdFromJson)(envVarStore);
     (0, file_utils_1.writeFile)(mdFileName, doc);
     console.log("Md file has been created");
 };
@@ -29,22 +29,22 @@ const main = () => {
         const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
         let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
-            const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
-            const ogDict = ogEnvVarsInfo.envVars;
+            const ogEnvVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogDict = ogEnvVarStore.envVars;
             variablesDict = (0, main_3.mergeEnvVarDicts)(ogDict, variablesDict);
         }
-        const envVarsInfo = {
+        const envVarStore = {
             version,
             envVars: variablesDict,
         };
-        writeJsonFile(jsonFileName, envVarsInfo);
+        writeJsonFile(jsonFileName, envVarStore);
     }
     else if (fileArgs.command === command_type_1.Command.GEN) {
         const jsonFileName = fileArgs.jsonFile;
         const mdFileName = fileArgs.mdFile;
-        const envVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
-        console.log(JSON.stringify(envVarsInfo.envVars, undefined, 2));
-        writeMdFile(mdFileName, envVarsInfo);
+        const envVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+        console.log(JSON.stringify(envVarStore.envVars, undefined, 2));
+        writeMdFile(mdFileName, envVarStore);
     }
     else {
         const configFileName = fileArgs.configFile;
@@ -56,16 +56,16 @@ const main = () => {
         const keyValuePairs = (0, main_2.parseInputFileIntoKeyValuePairs)(configFileName, configFileType);
         let variablesDict = (0, main_1.parseKeyValuePairsIntoEnvVarDict)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
-            const ogEnvVarsInfo = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
-            const ogDict = ogEnvVarsInfo.envVars;
+            const ogEnvVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
+            const ogDict = ogEnvVarStore.envVars;
             variablesDict = (0, main_3.mergeEnvVarDicts)(ogDict, variablesDict);
         }
-        const envVarsInfo = {
+        const envVarStore = {
             version,
             envVars: variablesDict,
         };
-        writeJsonFile(jsonFileName, envVarsInfo);
-        writeMdFile(mdFileName, envVarsInfo);
+        writeJsonFile(jsonFileName, envVarStore);
+        writeMdFile(mdFileName, envVarStore);
     }
 };
 main();

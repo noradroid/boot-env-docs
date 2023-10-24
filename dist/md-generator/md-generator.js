@@ -9,11 +9,11 @@ ${text}
 \`\`\`
   `;
 };
-const generateMdFromJson = (envVarsInfo) => {
+const generateMdFromJson = (envVarStore) => {
     var _a;
-    const envVarsDict = envVarsInfo.envVars;
+    const envVarsDict = envVarStore.envVars;
     const md = new declarative_markdown_1.Markdown("Environment Variables Documentation");
-    md.paragraph(`Last updated version: ${(_a = envVarsDict.version) !== null && _a !== void 0 ? _a : "<undefined>"}`);
+    md.paragraph(`Last updated version: ${(_a = envVarStore.version) !== null && _a !== void 0 ? _a : "<undefined>"}`);
     Object.values(envVarsDict).forEach((info) => {
         var _a, _b;
         md.header(info.envVar, 3).paragraph(info.description);

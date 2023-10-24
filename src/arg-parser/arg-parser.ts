@@ -12,7 +12,7 @@ import {
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
 import { CommandArgs } from "./types/file-args.type";
-import { Version } from "../types/version.type";
+import { Version } from "../shared/models/version.type";
 
 export const parseArgs = (): CommandArgs => {
   try {
