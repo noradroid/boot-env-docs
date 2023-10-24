@@ -12,10 +12,10 @@ import { APPEND_FLAG, VERSION_FLAG } from "./constants/flags";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
 import {
-  FileArgs,
-  GenFileArgs,
-  ParseFileArgs,
-  ParseGenFileArgs,
+  CommandArgs,
+  GenCommandArgs,
+  ParseCommandArgs,
+  ParseGenCommandArgs,
 } from "./types/file-args.type";
 import { FileType as ConfigFileType } from "../config-parser/shared/types/file.type";
 import { Version } from "../types/version.type";
@@ -151,7 +151,7 @@ const validateParseGenArgs = (fileNames: string[]) => {
 const getParseFileArgs = (
   fileNames: string[],
   append: boolean
-): ParseFileArgs => {
+): ParseCommandArgs => {
   return {
     command: Command.PARSE,
     configFile: fileNames[0],
@@ -161,7 +161,7 @@ const getParseFileArgs = (
   };
 };
 
-const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
+const getGenFileArgs = (fileNames: string[]): GenCommandArgs => {
   return {
     command: Command.GEN,
     jsonFile: fileNames[0],
@@ -172,7 +172,7 @@ const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
 const getParseGenFileArgs = (
   fileNames: string[],
   append: boolean
-): ParseGenFileArgs => {
+): ParseGenCommandArgs => {
   return {
     command: Command.PARSE_GEN,
     configFile: fileNames[0],
@@ -188,7 +188,7 @@ export const getFileArgs = (
   fileNames: string[],
   append: boolean,
   version: Version | undefined
-): FileArgs => {
+): CommandArgs => {
   if (command === Command.PARSE) {
     validateParseArgs(fileNames);
     return { ...getParseFileArgs(fileNames, append), version: version };

@@ -11,10 +11,10 @@ import {
 } from "./arg-utils";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
-import { FileArgs } from "./types/file-args.type";
+import { CommandArgs } from "./types/file-args.type";
 import { Version } from "../types/version.type";
 
-export const parseArgs = (): FileArgs => {
+export const parseArgs = (): CommandArgs => {
   try {
     checkArgsProvided();
 
@@ -28,7 +28,12 @@ export const parseArgs = (): FileArgs => {
 
     const fileNames = getFileNames(args, append, version !== undefined);
 
-    const fileArgs: FileArgs = getFileArgs(command, fileNames, append, version);
+    const fileArgs: CommandArgs = getFileArgs(
+      command,
+      fileNames,
+      append,
+      version
+    );
     return fileArgs;
   } catch (err) {
     if (err instanceof ArgParseError) {
