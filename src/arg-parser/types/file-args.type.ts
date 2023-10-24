@@ -2,15 +2,14 @@ import { FileType } from "../../config-parser/shared/types/file.type";
 import { Command } from "./command.type";
 import { Version } from "../../types/version.type";
 
-export type FileArgs = (ParseFileArgs | GenFileArgs | ParseGenFileArgs) & {
-  version?: Version;
-};
+export type FileArgs = ParseFileArgs | GenFileArgs | ParseGenFileArgs;
 
 export type ParseFileArgs = {
   command: Command.PARSE;
 } & ConfigFile &
   JsonFile & {
     append: boolean;
+    version?: Version;
   };
 
 export type GenFileArgs = {
@@ -24,6 +23,7 @@ export type ParseGenFileArgs = {
   JsonFile &
   MdFile & {
     append: boolean;
+    version?: Version;
   };
 
 export type ConfigFile = {

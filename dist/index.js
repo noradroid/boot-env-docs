@@ -37,7 +37,7 @@ const helper_utils_1 = require("./utils/misc/helper-utils");
 const writeJsonFile = (jsonFileName, envVarDict, version) => {
     console.log(JSON.stringify(envVarDict, undefined, 2));
     const jsonFileContent = {
-        version: version !== null && version !== void 0 ? version : "0.0.1",
+        version,
         envVars: envVarDict,
     };
     (0, file_utils_1.writeFile)(jsonFileName, JSON.stringify(jsonFileContent, undefined, 2));
@@ -50,12 +50,12 @@ const writeMdFile = (mdFileName, envVarDict) => {
 };
 const main = () => {
     const fileArgs = (0, arg_parser_1.parseArgs)();
-    const version = fileArgs.version;
     if (fileArgs.command === command_type_1.Command.PARSE) {
         const configFileName = fileArgs.configFile;
         const configFileType = fileArgs.configFileType;
         const jsonFileName = fileArgs.jsonFile;
         const append = fileArgs.append;
+        const version = fileArgs.version;
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
@@ -88,6 +88,7 @@ const main = () => {
         const jsonFileName = fileArgs.jsonFile;
         const mdFileName = fileArgs.mdFile;
         const append = fileArgs.append;
+        const version = fileArgs.version;
         const keyValuePairs = (0, main_2.default)(configFileName, configFileType);
         let variablesDict = (0, main_1.default)(keyValuePairs);
         if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {

@@ -21,7 +21,7 @@ const writeJsonFile = (
   console.log(JSON.stringify(envVarDict, undefined, 2));
 
   const jsonFileContent: EnvVarsInfo = {
-    version: version ?? "0.0.1",
+    version,
     envVars: envVarDict,
   };
 
@@ -41,13 +41,12 @@ const writeMdFile = (mdFileName: string, envVarDict: EnvVarsDict): void => {
 const main = () => {
   const fileArgs = parseArgs();
 
-  const version = fileArgs.version;
-
   if (fileArgs.command === Command.PARSE) {
     const configFileName = fileArgs.configFile;
     const configFileType = fileArgs.configFileType;
     const jsonFileName = fileArgs.jsonFile;
     const append = fileArgs.append;
+    const version = fileArgs.version;
 
     const keyValuePairs = parseInputFileIntoKeyValuePairs(
       configFileName,
@@ -95,6 +94,7 @@ const main = () => {
     const jsonFileName = fileArgs.jsonFile;
     const mdFileName = fileArgs.mdFile;
     const append = fileArgs.append;
+    const version = fileArgs.version;
 
     const keyValuePairs = parseInputFileIntoKeyValuePairs(
       configFileName,

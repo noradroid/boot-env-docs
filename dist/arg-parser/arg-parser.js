@@ -12,7 +12,7 @@ const parseArgs = () => {
         const command = (0, arg_utils_1.getCommand)(args);
         const append = (0, arg_utils_1.getAppendFlag)(args);
         const version = (0, arg_utils_1.getVersionArg)(args);
-        const fileNames = (0, arg_utils_1.getFileNames)(args, append, version !== null);
+        const fileNames = (0, arg_utils_1.getFileNames)(args, append, version !== undefined);
         const fileArgs = (0, arg_utils_1.getFileArgs)(command, fileNames, append, version);
         return fileArgs;
     }

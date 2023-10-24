@@ -26,7 +26,7 @@ export const parseArgs = (): FileArgs => {
 
     const version: Version | undefined = getVersionArg(args);
 
-    const fileNames = getFileNames(args, append, version !== null);
+    const fileNames = getFileNames(args, append, version !== undefined);
 
     const fileArgs: FileArgs = getFileArgs(command, fileNames, append, version);
     return fileArgs;
