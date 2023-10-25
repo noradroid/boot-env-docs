@@ -10,7 +10,7 @@ The aim of this project is to identify environment variables from a Spring Boot 
   - [Get environment variables from yaml file and generate markdown file](#get-environment-variables-from-yaml-file-and-generate-markdown-file)
   - [Get environment variables from properties file](#get-environment-variables-from-properties-file)
   - [Generate markdown file from edited output.json](#generate-markdown-file-from-edited-outputjson)
-  - [Get environment variables from yaml file and append to json file](#get-environment-variables-from-yaml-file-and-append-to-json-file)
+  - [Get environment variables from yaml file and update json file](#get-environment-variables-from-yaml-file-and-update-json-file)
 - [Test](#test)
 - [Enhancements](#enhancements)
 
@@ -131,14 +131,14 @@ sedocs g output.json output.md
 
 You can add more information (description, type) in the json file before generating the markdown documentation.
 
-### Get environment variables from yaml file and append to json file
+### Get environment variables from yaml file and update json file
 
 ```
-sedocs p application.yaml output.json -a
+sedocs p application.yaml output.json -u
 ```
 
 - parse from application.yaml file
-- append environment variables to output.json if existing
+- update environment variables in output.json if exists
 
 
 ## Test
