@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isWordFileVariable = exports.getEnvVarEndIndex = exports.getEnvVarStartIndex = void 0;
+exports.isWordFileVariable = exports.getMatchingClosingBraceIndex = exports.getEnvVarEndIndex = exports.getEnvVarStartIndex = void 0;
 const tokens_1 = require("./constants/tokens");
 /**
  * Get env var opening brace index from start index.
@@ -19,6 +19,24 @@ const getEnvVarEndIndex = (tokens, startIndex) => {
     return nextStartIndex === -1 ? tokens.length - 1 : nextStartIndex - 1;
 };
 exports.getEnvVarEndIndex = getEnvVarEndIndex;
+const getMatchingClosingBraceIndex = (tokens, startIndex, endIndex) => {
+    let index = startIndex + 1;
+    let openedBracketsCount = 1;
+    while (index < endIndex) {
+        if (tokens[index] === tokens_1.OPENING_CURLY_BRACE) {
+            openedBracketsCount += 1;
+        }
+        else if (tokens[index] === tokens_1.CLOSING_CURLY_BRACE) {
+            openedBracketsCount -= 1;
+        }
+        if (openedBracketsCount === 0) {
+            return index;
+        }
+        index += 1;
+    }
+    return endIndex;
+};
+exports.getMatchingClosingBraceIndex = getMatchingClosingBraceIndex;
 const isWordFileVariable = (word) => {
     return word.includes(tokens_1.DOT_SEPARATOR);
 };

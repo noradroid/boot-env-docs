@@ -29,8 +29,14 @@ const parseTokensIntoEnvVarDefaults = (tokens) => {
     let endIndex = 0;
     while (startIndex < tokens.length) {
         endIndex = (0, env_var_utils_1.getEnvVarEndIndex)(tokens, startIndex); // }
+        const matchingClosingBraceIndex = (0, env_var_utils_1.getMatchingClosingBraceIndex)(tokens, startIndex, endIndex);
         try {
-            envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex));
+            if (matchingClosingBraceIndex !== endIndex) {
+                envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, matchingClosingBraceIndex));
+            }
+            else {
+                envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex));
+            }
         }
         catch (err) {
             if (err instanceof non_env_var_config_error_1.NonEnvVarConfigError) {

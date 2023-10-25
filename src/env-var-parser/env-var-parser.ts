@@ -2,6 +2,7 @@ import { COLON_SEPARATOR } from "./constants/tokens";
 import {
   getEnvVarEndIndex,
   getEnvVarStartIndex,
+  getMatchingClosingBraceIndex,
   isWordFileVariable,
 } from "./env-var-utils";
 import { NonEnvVarConfigError } from "./errors/non-env-var-config.error";
@@ -41,10 +42,25 @@ export const parseTokensIntoEnvVarDefaults = (
 
   while (startIndex < tokens.length) {
     endIndex = getEnvVarEndIndex(tokens, startIndex); // }
+    const matchingClosingBraceIndex = getMatchingClosingBraceIndex(
+      tokens,
+      startIndex,
+      endIndex
+    );
     try {
-      envVarDefaults.push(
-        parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex)
-      );
+      if (matchingClosingBraceIndex !== endIndex) {
+        envVarDefaults.push(
+          parseTokensIntoEnvVarDefault(
+            tokens,
+            startIndex,
+            matchingClosingBraceIndex
+          )
+        );
+      } else {
+        envVarDefaults.push(
+          parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex)
+        );
+      }
     } catch (err) {
       if (err instanceof NonEnvVarConfigError) {
         console.log(`${err.name} - ${err.message}. Skipping...`);
