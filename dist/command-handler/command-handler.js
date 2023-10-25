@@ -4,7 +4,7 @@ exports.parseGenCmdHandler = exports.genCmdHandler = exports.parseCmdHandler = v
 const file_utils_1 = require("../utils/file/file-utils");
 const command_handler_utils_1 = require("./command-handler-utils");
 const parseCmdHandler = (args) => {
-    const envVarStore = (0, command_handler_utils_1.convertConfigToEnvVarStore)(args.configFile, args.configFileType, args.jsonFile, args.append, args.version);
+    const envVarStore = (0, command_handler_utils_1.convertConfigToEnvVarStore)(args.configFile, args.configFileType, args.jsonFile, args.update, args.version);
     (0, command_handler_utils_1.writeJsonFile)(args.jsonFile, envVarStore);
 };
 exports.parseCmdHandler = parseCmdHandler;
@@ -14,7 +14,7 @@ const genCmdHandler = (args) => {
 };
 exports.genCmdHandler = genCmdHandler;
 const parseGenCmdHandler = (args) => {
-    const envVarStore = (0, command_handler_utils_1.convertConfigToEnvVarStore)(args.configFile, args.configFileType, args.jsonFile, args.append, args.version);
+    const envVarStore = (0, command_handler_utils_1.convertConfigToEnvVarStore)(args.configFile, args.configFileType, args.jsonFile, args.update, args.version);
     (0, command_handler_utils_1.writeJsonFile)(args.jsonFile, envVarStore);
     (0, command_handler_utils_1.writeMdFile)(args.mdFile, envVarStore);
 };

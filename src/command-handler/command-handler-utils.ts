@@ -37,7 +37,7 @@ export const convertConfigToEnvVarStore = (
   configFileName: string,
   configFileType: ConfigFileType,
   jsonFileName: string,
-  append: boolean,
+  update: boolean,
   version: Version | undefined
 ): EnvVarStore => {
   const newKeyValues = parseIntoKeyValuePairs(
@@ -52,7 +52,7 @@ export const convertConfigToEnvVarStore = (
 
   let envVars: EnvVarsDict;
 
-  if (append && isFileExist(jsonFileName)) {
+  if (update && isFileExist(jsonFileName)) {
     const ogEnvVarStore: EnvVarStore = JSON.parse(readFile(jsonFileName));
     const ogEnvVars = ogEnvVarStore.envVars;
 

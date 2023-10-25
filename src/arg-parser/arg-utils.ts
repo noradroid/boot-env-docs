@@ -9,7 +9,7 @@ import {
   PARSE_GEN_CMD,
   PARSE_GEN_CMD_SH,
 } from "./constants/commands";
-import { APPEND_FLAG, VERSION_FLAG } from "./constants/flags";
+import { UPDATE_FLAG, VERSION_FLAG } from "./constants/flags";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
 import {
@@ -31,13 +31,13 @@ export const getArgs = (): string[] => {
 
 export const getFileNames = (
   args: string[],
-  append: boolean,
+  update: boolean,
   hasVersion: boolean
 ): string[] => {
   const argsAfterCmd = args.slice(1);
-  if (append) {
-    const appendIndex = argsAfterCmd.findIndex((arg) => arg === APPEND_FLAG);
-    argsAfterCmd.splice(appendIndex, 1);
+  if (update) {
+    const updateIndex = argsAfterCmd.findIndex((arg) => arg === UPDATE_FLAG);
+    argsAfterCmd.splice(updateIndex, 1);
   }
   if (hasVersion) {
     const versionIndex = argsAfterCmd.findIndex((arg) => arg === VERSION_FLAG);
@@ -72,11 +72,11 @@ export const getCommand = (args: string[]): Command => {
   }
 };
 
-// append flag
+// update flag
 
-export const getAppendFlag = (args: string[]): boolean => {
-  const append = args.find((a) => a === APPEND_FLAG);
-  return !!append;
+export const getUpdateFlag = (args: string[]): boolean => {
+  const update = args.find((a) => a === UPDATE_FLAG);
+  return !!update;
 };
 
 // version flag
@@ -149,14 +149,14 @@ const validateParseGenArgs = (fileNames: string[]) => {
 
 const getParseFileArgs = (
   fileNames: string[],
-  append: boolean
+  update: boolean
 ): ParseCommandArgs => {
   return {
     command: Command.PARSE,
     configFile: fileNames[0],
     configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
-    append,
+    update: update,
   };
 };
 
@@ -170,7 +170,7 @@ const getGenFileArgs = (fileNames: string[]): GenCommandArgs => {
 
 const getParseGenFileArgs = (
   fileNames: string[],
-  append: boolean
+  update: boolean
 ): ParseGenCommandArgs => {
   return {
     command: Command.PARSE_GEN,
@@ -178,25 +178,25 @@ const getParseGenFileArgs = (
     configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
     mdFile: fileNames[2],
-    append,
+    update: update,
   };
 };
 
 export const getFileArgs = (
   command: Command,
   fileNames: string[],
-  append: boolean,
+  update: boolean,
   version: Version | undefined
 ): CommandArgs => {
   if (command === Command.PARSE) {
     validateParseArgs(fileNames);
-    return { ...getParseFileArgs(fileNames, append), version: version };
+    return { ...getParseFileArgs(fileNames, update), version: version };
   } else if (command === Command.GEN) {
     validateGenArgs(fileNames);
     return getGenFileArgs(fileNames);
   } else {
     // PARSE_GEN
     validateParseGenArgs(fileNames);
-    return { ...getParseGenFileArgs(fileNames, append), version: version };
+    return { ...getParseGenFileArgs(fileNames, update), version: version };
   }
 };

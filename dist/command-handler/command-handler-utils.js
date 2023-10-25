@@ -18,11 +18,11 @@ const writeMdFile = (mdFileName, envVarStore) => {
     console.log("Md file has been created");
 };
 exports.writeMdFile = writeMdFile;
-const convertConfigToEnvVarStore = (configFileName, configFileType, jsonFileName, append, version) => {
+const convertConfigToEnvVarStore = (configFileName, configFileType, jsonFileName, update, version) => {
     const newKeyValues = (0, main_1.parseIntoKeyValuePairs)((0, file_utils_1.readFile)(configFileName), configFileType);
     const newEnvVars = (0, main_3.addVersionToEnvVarsDict)((0, main_2.parseKeyValuePairsIntoEnvVarDict)(newKeyValues), version);
     let envVars;
-    if (append && (0, file_utils_1.isFileExist)(jsonFileName)) {
+    if (update && (0, file_utils_1.isFileExist)(jsonFileName)) {
         const ogEnvVarStore = JSON.parse((0, file_utils_1.readFile)(jsonFileName));
         const ogEnvVars = ogEnvVarStore.envVars;
         envVars = (0, main_3.updateEnvVarsDict)(ogEnvVars, newEnvVars);

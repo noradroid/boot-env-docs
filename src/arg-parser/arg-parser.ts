@@ -3,7 +3,7 @@ import { formatParseError } from "../utils/errors/error-utils";
 import { FileTypeError } from "../utils/file/errors/file-type.error";
 import {
   checkArgsProvided,
-  getAppendFlag,
+  getUpdateFlag,
   getArgs,
   getCommand,
   getFileArgs,
@@ -22,16 +22,16 @@ export const parseArgs = (): CommandArgs => {
 
     const command: Command = getCommand(args);
 
-    const append: boolean = getAppendFlag(args);
+    const update: boolean = getUpdateFlag(args);
 
     const version: Version | undefined = getVersionArg(args);
 
-    const fileNames = getFileNames(args, append, version !== undefined);
+    const fileNames = getFileNames(args, update, version !== undefined);
 
     const fileArgs: CommandArgs = getFileArgs(
       command,
       fileNames,
-      append,
+      update,
       version
     );
     return fileArgs;

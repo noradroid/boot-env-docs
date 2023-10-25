@@ -16,7 +16,7 @@ export const parseCmdHandler = (args: ParseCommandArgs): void => {
     args.configFile,
     args.configFileType,
     args.jsonFile,
-    args.append,
+    args.update,
     args.version
   );
 
@@ -34,7 +34,7 @@ export const parseGenCmdHandler = (args: ParseGenCommandArgs): void => {
     args.configFile,
     args.configFileType,
     args.jsonFile,
-    args.append,
+    args.update,
     args.version
   );
 

@@ -11,7 +11,7 @@ export type ParseCommandArgs = {
   command: Command.PARSE;
 } & ConfigFile &
   JsonFile & {
-    append: boolean;
+    update: boolean;
     version?: Version;
   };
 
@@ -25,7 +25,7 @@ export type ParseGenCommandArgs = {
 } & ConfigFile &
   JsonFile &
   MdFile & {
-    append: boolean;
+    update: boolean;
     version?: Version;
   };
 
