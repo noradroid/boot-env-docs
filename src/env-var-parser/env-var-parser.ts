@@ -1,5 +1,10 @@
 import { COLON_SEPARATOR } from "./constants/tokens";
-import { getEnvVarStartIndex, getEnvVarEndIndex } from "./env-var-utils";
+import {
+  getEnvVarEndIndex,
+  getEnvVarStartIndex,
+  getMatchingClosingBraceIndex,
+  isWordFileVariable,
+} from "./env-var-utils";
 import { NonEnvVarConfigError } from "./errors/non-env-var-config.error";
 import { EnvVarDefault } from "./types/env-var-default.type";
 import { Tokens } from "./types/tokens.type";
@@ -20,9 +25,12 @@ const parseTokensIntoEnvVarDefault = (
     const configName = tokens[startIndex + 1];
     throw new NonEnvVarConfigError(configName);
   }
-  const envVar = tokens[colonIndex - 1];
+  const configName = tokens[colonIndex - 1];
+  if (isWordFileVariable(configName)) {
+    throw new NonEnvVarConfigError(configName);
+  }
   const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");
-  return { envVar, default: defaultStr };
+  return { envVar: configName, default: defaultStr };
 };
 
 export const parseTokensIntoEnvVarDefaults = (
@@ -34,10 +42,25 @@ export const parseTokensIntoEnvVarDefaults = (
 
   while (startIndex < tokens.length) {
     endIndex = getEnvVarEndIndex(tokens, startIndex); // }
+    const matchingClosingBraceIndex = getMatchingClosingBraceIndex(
+      tokens,
+      startIndex,
+      endIndex
+    );
     try {
-      envVarDefaults.push(
-        parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex)
-      );
+      if (matchingClosingBraceIndex !== endIndex) {
+        envVarDefaults.push(
+          parseTokensIntoEnvVarDefault(
+            tokens,
+            startIndex,
+            matchingClosingBraceIndex
+          )
+        );
+      } else {
+        envVarDefaults.push(
+          parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex)
+        );
+      }
     } catch (err) {
       if (err instanceof NonEnvVarConfigError) {
         console.log(`${err.name} - ${err.message}. Skipping...`);

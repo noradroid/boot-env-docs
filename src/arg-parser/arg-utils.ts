@@ -1,5 +1,6 @@
+import { Version } from "../shared/models/version.type";
 import { getFileType } from "../utils/file/file-utils";
-import { FileType } from "../utils/file/types/file.type";
+import { ConfigFileType, FileType } from "../utils/file/types/file.type";
 import {
   GEN_CMD,
   GEN_CMD_SH,
@@ -8,16 +9,15 @@ import {
   PARSE_GEN_CMD,
   PARSE_GEN_CMD_SH,
 } from "./constants/commands";
-import { APPEND_FLAG } from "./constants/flags";
+import { UPDATE_FLAG, VERSION_FLAG } from "./constants/flags";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
 import {
-  FileArgs,
-  GenFileArgs,
-  ParseFileArgs,
-  ParseGenFileArgs,
+  CommandArgs,
+  GenCommandArgs,
+  ParseCommandArgs,
+  ParseGenCommandArgs,
 } from "./types/file-args.type";
-import { FileType as ConfigFileType } from "../config-parser/shared/types/file.type";
 
 export const checkArgsProvided = (): void => {
   if (process.argv.length === 2) {
@@ -29,11 +29,19 @@ export const getArgs = (): string[] => {
   return process.argv.slice(2);
 };
 
-export const getFileNames = (args: string[], append: boolean): string[] => {
+export const getFileNames = (
+  args: string[],
+  update: boolean,
+  hasVersion: boolean
+): string[] => {
   const argsAfterCmd = args.slice(1);
-  if (append) {
-    const appendIndex = argsAfterCmd.findIndex((arg) => arg === APPEND_FLAG);
-    argsAfterCmd.splice(appendIndex, 1);
+  if (update) {
+    const updateIndex = argsAfterCmd.findIndex((arg) => arg === UPDATE_FLAG);
+    argsAfterCmd.splice(updateIndex, 1);
+  }
+  if (hasVersion) {
+    const versionIndex = argsAfterCmd.findIndex((arg) => arg === VERSION_FLAG);
+    argsAfterCmd.splice(versionIndex, 2);
   }
   return argsAfterCmd;
 };
@@ -64,13 +72,27 @@ export const getCommand = (args: string[]): Command => {
   }
 };
 
-// append flag
+// update flag
 
-export const getAppendFlag = (args: string[]): boolean => {
-  const append = args.find((a) => a === APPEND_FLAG);
-  return !!append;
+export const getUpdateFlag = (args: string[]): boolean => {
+  const update = args.find((a) => a === UPDATE_FLAG);
+  return !!update;
 };
 
+// version flag
+
+const isLastIndex = (arr: string[], index: number): boolean => {
+  return index === arr.length - 1;
+};
+
+export const getVersionArg = (args: string[]): Version | undefined => {
+  const versionFlagIndex = args.findIndex((a) => a === VERSION_FLAG);
+  if (versionFlagIndex !== -1 && !isLastIndex(args, versionFlagIndex)) {
+    return args[versionFlagIndex + 1];
+  } else {
+    return undefined;
+  }
+};
 // file args
 
 const isConfigFileArg = (arg: string): boolean => {
@@ -127,18 +149,18 @@ const validateParseGenArgs = (fileNames: string[]) => {
 
 const getParseFileArgs = (
   fileNames: string[],
-  append: boolean
-): ParseFileArgs => {
+  update: boolean
+): ParseCommandArgs => {
   return {
     command: Command.PARSE,
     configFile: fileNames[0],
-    configFileType: getFileType(fileNames[0]) as ConfigFileType,
+    configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
-    append,
+    update: update,
   };
 };
 
-const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
+const getGenFileArgs = (fileNames: string[]): GenCommandArgs => {
   return {
     command: Command.GEN,
     jsonFile: fileNames[0],
@@ -148,32 +170,33 @@ const getGenFileArgs = (fileNames: string[]): GenFileArgs => {
 
 const getParseGenFileArgs = (
   fileNames: string[],
-  append: boolean
-): ParseGenFileArgs => {
+  update: boolean
+): ParseGenCommandArgs => {
   return {
     command: Command.PARSE_GEN,
     configFile: fileNames[0],
-    configFileType: getFileType(fileNames[0]) as ConfigFileType,
+    configFileType: getFileType(fileNames[0]) as unknown as ConfigFileType,
     jsonFile: fileNames[1],
     mdFile: fileNames[2],
-    append,
+    update: update,
   };
 };
 
 export const getFileArgs = (
   command: Command,
   fileNames: string[],
-  append: boolean
-): FileArgs => {
+  update: boolean,
+  version: Version | undefined
+): CommandArgs => {
   if (command === Command.PARSE) {
     validateParseArgs(fileNames);
-    return getParseFileArgs(fileNames, append);
+    return { ...getParseFileArgs(fileNames, update), version: version };
   } else if (command === Command.GEN) {
     validateGenArgs(fileNames);
     return getGenFileArgs(fileNames);
   } else {
     // PARSE_GEN
     validateParseGenArgs(fileNames);
-    return getParseGenFileArgs(fileNames, append);
+    return { ...getParseGenFileArgs(fileNames, update), version: version };
   }
 };

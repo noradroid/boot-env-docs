@@ -1,31 +1,37 @@
-import { FileType } from "../../config-parser/shared/types/file.type";
+import { Version } from "../../shared/models/version.type";
+import { ConfigFileType } from "../../utils/file/types/file.type";
 import { Command } from "./command.type";
 
-export type FileArgs = ParseFileArgs | GenFileArgs | ParseGenFileArgs;
+export type CommandArgs =
+  | ParseCommandArgs
+  | GenCommandArgs
+  | ParseGenCommandArgs;
 
-export type ParseFileArgs = {
+export type ParseCommandArgs = {
   command: Command.PARSE;
 } & ConfigFile &
   JsonFile & {
-    append: boolean;
+    update: boolean;
+    version?: Version;
   };
 
-export type GenFileArgs = {
+export type GenCommandArgs = {
   command: Command.GEN;
 } & JsonFile &
   MdFile;
 
-export type ParseGenFileArgs = {
+export type ParseGenCommandArgs = {
   command: Command.PARSE_GEN;
 } & ConfigFile &
   JsonFile &
   MdFile & {
-    append: boolean;
+    update: boolean;
+    version?: Version;
   };
 
 export type ConfigFile = {
   configFile: string;
-  configFileType: FileType;
+  configFileType: ConfigFileType;
 };
 
 export type JsonFile = {

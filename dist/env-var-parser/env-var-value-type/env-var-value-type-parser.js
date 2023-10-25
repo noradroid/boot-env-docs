@@ -7,10 +7,8 @@ const isEmpty = (value) => {
 const isNumber = (value) => {
     return value.length === 0 ? false : !Number.isNaN(Number(value));
 };
-const TRUE_VALUE = "true";
-const FALSE_VALUE = "false";
 const isBoolean = (value) => {
-    return (value.toLowerCase() === TRUE_VALUE || value.toLowerCase() === FALSE_VALUE);
+    return value.toLowerCase() === "true" || value.toLowerCase() === "false";
 };
 const getValueType = (value) => {
     if (isEmpty(value)) {
@@ -31,7 +29,7 @@ const convertIntoNumber = (value) => {
     return Number(value);
 };
 const convertIntoBoolean = (value) => {
-    return value.toLowerCase() === TRUE_VALUE;
+    return value.toLowerCase() === "true";
 };
 const convertValueIntoType = (value, type) => {
     if (type === "unknown") {

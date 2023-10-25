@@ -1,13 +1,17 @@
+import { Version } from "../version.type";
 import { DefaultValue } from "./default-value.type";
 
-export type EnvVarDict = { [envVar: string]: EnvVarData };
+export type EnvVarsDict = { [envVar: string]: EnvVarData };
 
 export type EnvVarData = {
   envVar: string;
-  description: string;
   type: string;
   default?: DefaultValue;
   instances: EnvVarInstance[];
+  description: string;
+  introducedVersion?: Version;
+  updatedVersion?: Version;
+  deprecatedVersion?: Version;
 };
 
 export type EnvVarInstance = {

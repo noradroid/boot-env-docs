@@ -16,9 +16,12 @@ const parseTokensIntoEnvVarDefault = (tokens, startIndex, endIndex) => {
         const configName = tokens[startIndex + 1];
         throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
     }
-    const envVar = tokens[colonIndex - 1];
+    const configName = tokens[colonIndex - 1];
+    if ((0, env_var_utils_1.isWordFileVariable)(configName)) {
+        throw new non_env_var_config_error_1.NonEnvVarConfigError(configName);
+    }
     const defaultStr = tokens.slice(colonIndex + 1, endIndex).join("");
-    return { envVar, default: defaultStr };
+    return { envVar: configName, default: defaultStr };
 };
 const parseTokensIntoEnvVarDefaults = (tokens) => {
     const envVarDefaults = [];
@@ -26,8 +29,14 @@ const parseTokensIntoEnvVarDefaults = (tokens) => {
     let endIndex = 0;
     while (startIndex < tokens.length) {
         endIndex = (0, env_var_utils_1.getEnvVarEndIndex)(tokens, startIndex); // }
+        const matchingClosingBraceIndex = (0, env_var_utils_1.getMatchingClosingBraceIndex)(tokens, startIndex, endIndex);
         try {
-            envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex));
+            if (matchingClosingBraceIndex !== endIndex) {
+                envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, matchingClosingBraceIndex));
+            }
+            else {
+                envVarDefaults.push(parseTokensIntoEnvVarDefault(tokens, startIndex, endIndex));
+            }
         }
         catch (err) {
             if (err instanceof non_env_var_config_error_1.NonEnvVarConfigError) {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FileType = void 0;
+exports.ConfigFileType = exports.FileType = void 0;
 const file_extensions_1 = require("../constants/file-extensions");
 var FileType;
 (function (FileType) {
@@ -9,3 +9,8 @@ var FileType;
     FileType["JSON"] = ".json";
     FileType["MD"] = ".md";
 })(FileType || (exports.FileType = FileType = {}));
+var ConfigFileType;
+(function (ConfigFileType) {
+    ConfigFileType["YAML"] = ".yaml";
+    ConfigFileType["PROPERTIES"] = ".properties";
+})(ConfigFileType || (exports.ConfigFileType = ConfigFileType = {}));

@@ -1,4 +1,4 @@
-import { DefaultValue } from "../types/default-value.type";
+import { DefaultValue } from "../../shared/models/env-var/default-value.type";
 import { ValueType } from "./types/value-type.type";
 
 const isEmpty = (value: string): boolean => {
@@ -9,14 +9,8 @@ const isNumber = (value: string): boolean => {
   return value.length === 0 ? false : !Number.isNaN(Number(value));
 };
 
-const TRUE_VALUE = "true";
-
-const FALSE_VALUE = "false";
-
 const isBoolean = (value: string): boolean => {
-  return (
-    value.toLowerCase() === TRUE_VALUE || value.toLowerCase() === FALSE_VALUE
-  );
+  return value.toLowerCase() === "true" || value.toLowerCase() === "false";
 };
 
 export const getValueType = (value: string): ValueType => {
@@ -36,7 +30,7 @@ const convertIntoNumber = (value: string): number => {
 };
 
 const convertIntoBoolean = (value: string): boolean => {
-  return value.toLowerCase() === TRUE_VALUE;
+  return value.toLowerCase() === "true";
 };
 
 export const convertValueIntoType = (

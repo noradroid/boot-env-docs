@@ -1,25 +1,26 @@
 import { YAMLParseError } from "yaml";
+
 import { formatParseError } from "../utils/errors/error-utils";
-import { readFile } from "../utils/file/file-utils";
+import { ConfigFileType } from "../utils/file/types/file.type";
 import { PropertiesParseError } from "./properties/errors/properties-parse.error";
 import { parseDotProperties } from "./properties/properties-parser";
 import { validateDotProperties } from "./properties/properties-validator";
-import { FileType } from "./shared/types/file.type";
 import { KeyValuePairs } from "./shared/types/key-value.type";
 import { parseDotYaml } from "./yaml/yaml-parser";
 import { validateDotYaml } from "./yaml/yaml-validator";
 
-const main = (fileName: string, fileType: FileType) => {
+export const parseIntoKeyValuePairs = (
+  fileContent: string,
+  fileType: ConfigFileType
+) => {
   try {
-    const contents: string = readFile(fileName);
-
-    if (fileType === FileType.YAML) {
-      validateDotYaml(contents);
-      const keyValuePairs: KeyValuePairs = parseDotYaml(contents);
+    if (fileType === ConfigFileType.YAML) {
+      validateDotYaml(fileContent);
+      const keyValuePairs: KeyValuePairs = parseDotYaml(fileContent);
       return keyValuePairs;
     } else {
-      validateDotProperties(contents);
-      const keyValuePairs: KeyValuePairs = parseDotProperties(contents);
+      validateDotProperties(fileContent);
+      const keyValuePairs: KeyValuePairs = parseDotProperties(fileContent);
       return keyValuePairs;
     }
   } catch (err) {
@@ -37,5 +38,3 @@ const main = (fileName: string, fileType: FileType) => {
     process.exit(1);
   }
 };
-
-export default main;

@@ -1,18 +1,20 @@
+import { Version } from "../shared/models/version.type";
 import { formatParseError } from "../utils/errors/error-utils";
 import { FileTypeError } from "../utils/file/errors/file-type.error";
 import {
   checkArgsProvided,
-  getAppendFlag,
+  getUpdateFlag,
   getArgs,
   getCommand,
   getFileArgs,
   getFileNames,
+  getVersionArg,
 } from "./arg-utils";
 import { ArgParseError } from "./errors/arg-parse.error";
 import { Command } from "./types/command.type";
-import { FileArgs } from "./types/file-args.type";
+import { CommandArgs } from "./types/file-args.type";
 
-export const parseArgs = (): FileArgs => {
+export const parseArgs = (): CommandArgs => {
   try {
     checkArgsProvided();
 
@@ -20,11 +22,18 @@ export const parseArgs = (): FileArgs => {
 
     const command: Command = getCommand(args);
 
-    const append: boolean = getAppendFlag(args);
+    const update: boolean = getUpdateFlag(args);
 
-    const fileNames = getFileNames(args, append);
+    const version: Version | undefined = getVersionArg(args);
 
-    const fileArgs: FileArgs = getFileArgs(command, fileNames, append);
+    const fileNames = getFileNames(args, update, version !== undefined);
+
+    const fileArgs: CommandArgs = getFileArgs(
+      command,
+      fileNames,
+      update,
+      version
+    );
     return fileArgs;
   } catch (err) {
     if (err instanceof ArgParseError) {
