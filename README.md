@@ -151,3 +151,4 @@ Debug using nodemon command.
 
 - To not flag file configuration such as `${application.name}` with no default value as an error, and exclude such configs from environment variables.
 - Update error messages
+- Add version info
