@@ -7,17 +7,22 @@ const isEnvVarDataChanged = (oldData, newData) => {
         oldData.type !== newData.type ||
         !(0, helper_utils_1.isObjsEqual)(oldData.instances, newData.instances));
 };
-const updateEnvVarsDict = (oldDict, newDict) => {
-    const updated = (0, helper_utils_1.clone)(oldDict);
+const updateEnvVarsDict = (oldDict, newDict, version) => {
+    const updated = {};
     Object.entries(newDict).forEach(([envVar, data]) => {
-        if (envVar in updated) {
-            const ogData = updated[envVar];
+        if (envVar in oldDict) {
+            const ogData = oldDict[envVar];
             if (isEnvVarDataChanged(ogData, data)) {
                 updated[envVar] = Object.assign(Object.assign({}, ogData), { updatedVersion: data.updatedVersion, type: data.type, default: data.default, instances: data.instances });
             }
         }
         else {
             updated[envVar] = data;
+        }
+    });
+    Object.entries(oldDict).forEach(([envVar, data]) => {
+        if (!(envVar in updated)) {
+            updated[envVar] = Object.assign(Object.assign({}, data), { deprecatedVersion: version });
         }
     });
     return updated;

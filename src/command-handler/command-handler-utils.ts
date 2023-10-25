@@ -56,7 +56,7 @@ export const convertConfigToEnvVarStore = (
     const ogEnvVarStore: EnvVarStore = JSON.parse(readFile(jsonFileName));
     const ogEnvVars = ogEnvVarStore.envVars;
 
-    envVars = updateEnvVarsDict(ogEnvVars, newEnvVars);
+    envVars = updateEnvVarsDict(ogEnvVars, newEnvVars, version);
   } else {
     envVars = newEnvVars;
   }

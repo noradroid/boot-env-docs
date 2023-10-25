@@ -11,6 +11,7 @@ export type EnvVarData = {
   description: string;
   introducedVersion?: Version;
   updatedVersion?: Version;
+  deprecatedVersion?: Version;
 };
 
 export type EnvVarInstance = {
