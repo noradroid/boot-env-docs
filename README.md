@@ -1,12 +1,15 @@
 # Spring Boot Environment Variables Docs Generator
 
-The aim of this project is to identify environment variables from a Spring Boot property file, and generate a Markdown template documentation for these environment variables.
+> Extract environment variables from Spring Boot properties files and generate Markdown documentation.
+
+## Table of Contents
 
 - [What are Spring Boot environment variables?](#what-are-spring-boot-environment-variables)
 - [Defining valid environment variables syntax](#defining-valid-environment-variables-syntax)
     - [Valid](#valid)
     - [Invalid](#invalid)
-- [Run](#run)
+- [Installation](#installation)
+- [Usage](#usage)
   - [Get environment variables from yaml file and generate markdown file](#get-environment-variables-from-yaml-file-and-generate-markdown-file)
   - [Get environment variables from properties file](#get-environment-variables-from-properties-file)
   - [Generate markdown file from edited output.json](#generate-markdown-file-from-edited-outputjson)
@@ -99,9 +102,13 @@ property: ${PROPERTY:property A
 ```
 > Spring Boot will not recognise PROPERTY as an environment variable, and will treat the entire string "${PROPERTY:property A" as the value for `property`
 
-## Run
+## Installation
 
-**Install**: `npm i spring-env-docs`
+```
+npm i spring-env-docs -g
+```
+
+## Usage
 
 ### Get environment variables from yaml file and generate markdown file
 
